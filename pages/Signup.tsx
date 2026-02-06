@@ -70,7 +70,7 @@ const Signup: React.FC = () => {
         <div className="p-8 md:p-10 bg-slate-800 flex flex-col justify-center max-h-[90vh] overflow-y-auto scrollbar-hide">
           <div className="mb-6">
             <h1 className="text-2xl font-bold text-white mb-1">Get Started</h1>
-            <button onClick={() => window.location.hash = '#/login'} className="text-sm text-blue-400 font-medium hover:underline">Already have an account? Log in</button>
+            <button onClick={() => window.location.pathname = '/login'} className="text-sm text-blue-400 font-medium hover:underline">Already have an account? Log in</button>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">

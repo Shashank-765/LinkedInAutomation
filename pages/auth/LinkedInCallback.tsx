@@ -13,7 +13,7 @@ const LinkedInCallback: React.FC = () => {
     setStatus('LOADING');
     
     // Robust param parsing
-    const urlParams = new URLSearchParams(window.location.search || window.location.hash.split('?')[1]);
+    const urlParams = new URLSearchParams(window.location.search || window.location.pathname.split('?')[1]);
     const code = urlParams.get('code') || (forceSimulate ? 'sim_code_' + Date.now() : null);
     const error = urlParams.get('error');
     
@@ -29,7 +29,7 @@ const LinkedInCallback: React.FC = () => {
         setUser(response.data.user);
         setStatus('SUCCESS');
         setTimeout(() => {
-          window.location.hash = '#/settings';
+          window.location.pathname = '/settings';
         }, 1500);
       }
     } catch (err: any) {
@@ -97,7 +97,7 @@ const LinkedInCallback: React.FC = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                <button 
-                onClick={() => window.location.href = `${window.location.origin}/#/settings`}
+                onClick={() => window.location.href = `${window.location.origin}/settings`}
                 className="w-full py-5 bg-slate-700 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] border border-white/5 transition-all"
                >
                  Back to Settings

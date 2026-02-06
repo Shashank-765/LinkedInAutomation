@@ -11,7 +11,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, logout } = useAuth();
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const currentHash = window.location.hash || '/';
+  const currentPath = window.location.pathname || '/';
 console.log('isDarkMode', isDarkMode)
 useEffect(() => {
   const savedTheme = localStorage.getItem('theme') || 'dark';
@@ -35,20 +35,20 @@ const toggleTheme = () => {
 
 
   const navItems = [
-    { label: 'Dashboard', icon: LayoutDashboard, role: [UserRole.USER, UserRole.ADMIN, UserRole.SUPER_ADMIN], path: '#/dashboard' },
-    { label: 'Create Post', icon: PlusCircle, role: [UserRole.SUPER_ADMIN,UserRole.ADMIN, UserRole.USER], path: '#/create' },
-    { label: 'Review Queue', icon: CheckSquare, role: [UserRole.SUPER_ADMIN,UserRole.ADMIN, UserRole.USER], path: '#/user/review' },
-    { label: 'Schedule', icon: Send, role: [UserRole.SUPER_ADMIN,UserRole.ADMIN, UserRole.USER], path: '#/schedule' },
-    { label: 'AutoPost Node', icon: Rocket, role: [UserRole.USER, UserRole.ADMIN, UserRole.SUPER_ADMIN], path: '#/autopilot' },
-    { label: 'User Management', icon: Users, role: [UserRole.ADMIN, UserRole.SUPER_ADMIN], path: '#/admin/users' },
-    { label: 'Ad Management', icon: Megaphone, role: [UserRole.ADMIN, UserRole.SUPER_ADMIN], path: '#/admin/ads' }, // Added
-    { label: 'Plans & Billing', icon: CreditCard, role: [UserRole.SUPER_ADMIN,UserRole.ADMIN, UserRole.USER], path: '#/admin/plans' },
-    { label: 'Analytics', icon: BarChart3, role: [UserRole.USER, UserRole.ADMIN, UserRole.SUPER_ADMIN], path: '#/analytics' },
-    { label: 'Settings', icon: Settings, role: [UserRole.USER, UserRole.ADMIN, UserRole.SUPER_ADMIN], path: '#/settings' },
+    { label: 'Dashboard', icon: LayoutDashboard, role: [UserRole.USER, UserRole.ADMIN, UserRole.SUPER_ADMIN], path: '/dashboard' },
+    { label: 'Create Post', icon: PlusCircle, role: [UserRole.SUPER_ADMIN,UserRole.ADMIN, UserRole.USER], path: '/create' },
+    { label: 'Review Queue', icon: CheckSquare, role: [UserRole.SUPER_ADMIN,UserRole.ADMIN, UserRole.USER], path: '/user/review' },
+    { label: 'Schedule', icon: Send, role: [UserRole.SUPER_ADMIN,UserRole.ADMIN, UserRole.USER], path: '/schedule' },
+    { label: 'AutoPost Node', icon: Rocket, role: [UserRole.USER, UserRole.ADMIN, UserRole.SUPER_ADMIN], path: '/autopilot' },
+    { label: 'User Management', icon: Users, role: [UserRole.ADMIN, UserRole.SUPER_ADMIN], path: '/admin/users' },
+    { label: 'Ad Management', icon: Megaphone, role: [UserRole.ADMIN, UserRole.SUPER_ADMIN], path: '/admin/ads' }, // Added
+    { label: 'Plans & Billing', icon: CreditCard, role: [UserRole.SUPER_ADMIN,UserRole.ADMIN, UserRole.USER], path: '/admin/plans' },
+    { label: 'Analytics', icon: BarChart3, role: [UserRole.USER, UserRole.ADMIN, UserRole.SUPER_ADMIN], path: '/analytics' },
+    { label: 'Settings', icon: Settings, role: [UserRole.USER, UserRole.ADMIN, UserRole.SUPER_ADMIN], path: '/settings' },
   ];
 
   const navigate = (path: string) => {
-    window.location.hash = path;
+    window.location.pathname = path;
     setIsMobileMenuOpen(false);
   };
 
@@ -63,7 +63,7 @@ const toggleTheme = () => {
   return (
     <div className="min-h-screen flex bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white">
       <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800/50 transform transition-transform duration-300 lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div onClick={()=>window.location.hash = '#/'} className="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-800 cursor-pointer">
+        <div onClick={()=>window.location.pathname = '/'} className="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-800 cursor-pointer">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
               <Send className="text-white w-5 h-5" />
@@ -79,12 +79,12 @@ const toggleTheme = () => {
               key={item.label} 
               onClick={() => navigate(item.path)}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors font-black uppercase tracking-widest text-[10px] group ${
-                currentHash === item.path 
+                currentPath === item.path 
                 ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20' 
                 : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50'
               }`}
             >
-              <item.icon className={`w-4 h-4 ${currentHash === item.path ? 'text-white' : 'group-hover:text-blue-600'}`} />
+              <item.icon className={`w-4 h-4 ${currentPath === item.path ? 'text-white' : 'group-hover:text-blue-600'}`} />
               {item.label}
             </button>
           ))}
@@ -117,7 +117,7 @@ const toggleTheme = () => {
                            {aiUsage} / {aiLimit} AI Posts
                           </p>
                           {usagePercentage > 80 && (user?.role === UserRole.USER || user?.role === UserRole.ADMIN || user?.role === UserRole.SUPER_ADMIN) && (
-                            <button onClick={() => navigate('#/admin/plans')} className="text-[8px] font-black text-blue-600 uppercase flex items-center gap-1 hover:underline">
+                            <button onClick={() => navigate('/admin/plans')} className="text-[8px] font-black text-blue-600 uppercase flex items-center gap-1 hover:underline">
                                Upgrade <ArrowUpCircle className="w-2.5 h-2.5" />
                             </button>
                           )}
@@ -141,7 +141,7 @@ const toggleTheme = () => {
                              <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${user?.linkedInConnected ? 'bg-blue-600 text-white' : 'bg-red-600 text-white'}`}>
                                 <Linkedin className="w-4 h-4 fill-current"/>
                              </div>
-                             <div onClick={() => navigate('#/settings')}  className="overflow-hidden cursor-pointer">
+                             <div onClick={() => navigate('/settings')}  className="overflow-hidden cursor-pointer">
                                 <p className="text-[9px] font-black uppercase tracking-widest leading-none text-slate-500">LinkedIn Status</p>
                                 <p className={`text-[10px] font-black uppercase tracking-tighter truncate ${user?.linkedInConnected ? 'text-blue-600' : 'text-red-600'}`}>
                                    {user?.linkedInConnected ? 'Connected' : 'Offline'}

@@ -38,7 +38,7 @@ const LandingPage: React.FC = () => {
   }, [ads.length, hasMultipleAds]);
   
   const navigateTo = () => {
-    window.location.hash = user ? '#/dashboard' : '#/login';
+    window.location.pathname = user ? '/dashboard' : '/login';
   };
 
   return (
@@ -53,7 +53,7 @@ const LandingPage: React.FC = () => {
           </div>
           <div className="hidden md:flex items-center gap-10">
             {['Product', 'Enterprise', 'Partners', 'Pricing'].map((item) => (
-              <a key={item} href="#" className="text-[11px] font-black uppercase tracking-widest text-slate-400 hover:text-white transition-colors">{item}</a>
+              <a key={item} href="" className="text-[11px] font-black uppercase tracking-widest text-slate-400 hover:text-white transition-colors">{item}</a>
             ))}
           </div>
           <div className="flex items-center gap-4">
@@ -372,7 +372,7 @@ const LandingPage: React.FC = () => {
                      <h4 className="text-[10px] font-black text-white uppercase tracking-[0.3em] mb-8">Ecosystem</h4>
                      <ul className="space-y-4">
                        {['Features', 'Marketplace', 'API Docs', 'Safety Cloud'].map(item => (
-                         <li key={item}><a href="#" className="text-xs font-bold text-slate-500 hover:text-blue-500 transition-colors">{item}</a></li>
+                         <li key={item}><a href="" className="text-xs font-bold text-slate-500 hover:text-blue-500 transition-colors">{item}</a></li>
                        ))}
                      </ul>
                   </div>
@@ -381,7 +381,7 @@ const LandingPage: React.FC = () => {
                      <h4 className="text-[10px] font-black text-white uppercase tracking-[0.3em] mb-8">Governance</h4>
                      <ul className="space-y-4">
                        {['Privacy Protocol', 'Service Agreement', 'Security Audit', 'Billing'].map(item => (
-                         <li key={item}><a href="#" className="text-xs font-bold text-slate-500 hover:text-blue-500 transition-colors">{item}</a></li>
+                         <li key={item}><a href="" className="text-xs font-bold text-slate-500 hover:text-blue-500 transition-colors">{item}</a></li>
                        ))}
                      </ul>
                   </div>

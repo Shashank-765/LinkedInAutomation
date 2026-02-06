@@ -558,7 +558,7 @@ const PostCreator: React.FC = () => {
                           <Zap className="w-5 h-5" />
                       </div>
                       <h4 className="text-xl font-black uppercase tracking-tighter">AutoPost Handle</h4>
-                      <button onClick={() => window.location.hash = '#/autopilot'} className="w-full py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl text-[9px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2">
+                      <button onClick={() => window.location.pathname = '/autopilot'} className="w-full py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl text-[9px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2">
                           Manage Autopost <ChevronRight className="w-3 h-3" />
                       </button>
                     </div>
@@ -601,7 +601,7 @@ const PostCreator: React.FC = () => {
                       </div>
                       <h4 className="text-xl font-black uppercase tracking-tighter">AutoPilot Insight</h4>
                       <p className="text-[10px] text-slate-400 font-medium leading-relaxed uppercase tracking-widest">When inactive, our engine sources global news signals from your industry to maintain authority.</p>
-                      <button onClick={() => window.location.hash = '#/autopilot'} className="w-full py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl text-[9px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2">
+                      <button onClick={() => window.location.pathname = '/autopilot'} className="w-full py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl text-[9px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2">
                           Manage Protocol <ChevronRight className="w-3 h-3" />
                       </button>
                     </div>

@@ -68,7 +68,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user));
       setState({ user, token, isAuthenticated: true });
-      window.location.hash = '/dashboard';
+      window.location.pathname = '/dashboard';
     } catch (error) {
       throw error;
     }
@@ -90,7 +90,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setState({ user: null, token: null, isAuthenticated: false });
-    window.location.hash = '/login';
+    window.location.pathname = '/login';
   };
 
   const updatePlan = async (planId: string) => {

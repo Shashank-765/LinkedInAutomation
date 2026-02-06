@@ -354,7 +354,7 @@ const PlanManagement: React.FC = () => {
                       <p className="text-slate-500 mt-4 font-medium max-w-sm mx-auto text-lg leading-relaxed">Your account has been upgraded to the <span className="text-blue-600 font-black">{selectedPlanToBuy.name} tier</span>. Automation limits are now active.</p>
                    </div>
                    <button 
-                    onClick={() => { setIsCheckoutOpen(false); window.location.hash = '/dashboard'; }}
+                    onClick={() => { setIsCheckoutOpen(false); window.location.pathname = '/dashboard'; }}
                     className="px-16 py-6 bg-blue-600 text-white rounded-[2rem] font-black uppercase tracking-widest text-xs shadow-xl shadow-blue-500/30 hover:scale-105 transition-all inline-flex items-center gap-4"
                    >
                       Go to Dashboard <ChevronRight className="w-5 h-5" />

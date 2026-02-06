@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
@@ -21,33 +22,35 @@ import NotFoundPage from './pages/404';
 
 const Router: React.FC = () => {
   const { isAuthenticated } = useAuth();
-  const [route, setRoute] = React.useState(window.location.hash || '#/');
+  const [route, setRoute] = React.useState(window.location.pathname || '/');
 
   React.useEffect(() => {
-    const handleHashChange = () => setRoute(window.location.hash || '#/');
-    window.addEventListener('hashchange', handleHashChange);
-    if (!window.location.hash) window.location.hash = '#/';
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    const handlePathChange = () => setRoute(window.location.pathname || '/');
+    window.addEventListener('popstate', handlePathChange);
+    if (!window.location.pathname) window.location.pathname = '/';
+    return () => window.removeEventListener('popstate', handlePathChange);
   }, []);
+  console.log('route', route)
+  console.log(window.location)
 
-  if (route === '#/home' || route === '#/') return <LandingPage />;
-  if (!isAuthenticated && route === '#/login') return <Login />;
+  if (route === '/home' || route === '/') return <LandingPage />;
+  if (!isAuthenticated && route === '/login') return <Login />;
 
   const renderRoute = () => {
     const isLinkedInCallback = window.location.href.includes('/?code');
     if (isLinkedInCallback) return <LinkedInCallback />;
 
     switch (route) {
-      case '#/dashboard': return <Dashboard />;
-      case '#/create': return <PostCreator />;
-      case '#/user/review': return <PostApprovals />; 
-      case '#/schedule': return <ScheduleManager />;
-      case '#/autopilot': return <AutoPilotManager />;
-      case '#/admin/users': return <UserManagement />;
-      case '#/admin/ads': return <AdManagement />; // Added
-      case '#/admin/plans': return <PlanManagement />;
-      case '#/analytics': return <Analytics />;
-      case '#/settings': return <Settings />;
+      case '/dashboard': return <Dashboard />;
+      case '/create': return <PostCreator />;
+      case '/user/review': return <PostApprovals />; 
+      case '/schedule': return <ScheduleManager />;
+      case '/autopilot': return <AutoPilotManager />;
+      case '/admin/users': return <UserManagement />;
+      case '/admin/ads': return <AdManagement />; // Added
+      case '/admin/plans': return <PlanManagement />;
+      case '/analytics': return <Analytics />;
+      case '/settings': return <Settings />;
       default: return <NotFoundPage />;
     }
   };
@@ -59,7 +62,7 @@ const App: React.FC = () => {
   return (
     <AuthProvider>
       <ToastContainer aria-label="Notifications" />
-      <Router />
+        <Router />
     </AuthProvider>
   );
 };

@@ -4,7 +4,7 @@ import { ArrowRight } from 'lucide-react';
 
 const NotFoundPage: React.FC = () => {
   const navigateHome = () => {
-    window.location.href = `${window.location.origin}/#/home`;
+    window.location.href = `${window.location.origin}/home`;
   };
 
   return (

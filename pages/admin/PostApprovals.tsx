@@ -391,7 +391,7 @@ const PostApprovals: React.FC = () => {
                   <h3 className="text-3xl font-black text-slate-900 dark:text-white uppercase tracking-tighter ">Selection Required</h3>
                   <p className="text-slate-500 font-medium max-w-sm mx-auto mt-4 leading-relaxed">Select a high-context draft from the left to audit, refine, and deploy to your audience.</p>
                </div>
-               <button onClick={() => window.location.hash = '/create'} className="px-10 py-4 bg-blue-600 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl shadow-blue-500/20 active:scale-95 flex items-center gap-3">
+               <button onClick={() => window.location.pathname = '/create'} className="px-10 py-4 bg-blue-600 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl shadow-blue-500/20 active:scale-95 flex items-center gap-3">
                  <Sparkles className="w-4 h-4" /> Generate New Cycles
                </button>
             </div>

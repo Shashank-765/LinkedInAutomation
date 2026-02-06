@@ -136,7 +136,7 @@ useEffect(() => {
         </div>
 
         <button
-          onClick={() => (window.location.hash = '#/create')}
+          onClick={() => (window.location.pathname = '/create')}
           className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-5 rounded-[1.5rem] font-black uppercase tracking-widest text-[11px] flex items-center gap-3 shadow-2xl shadow-blue-500/30"
         >
           <Zap className="w-5 h-5" /> Create Post
@@ -292,7 +292,7 @@ useEffect(() => {
           </div>
 
           <button
-            onClick={() => (window.location.hash = '#/schedule')}
+            onClick={() => (window.location.pathname = '/schedule')}
             className="w-full mt-8 py-4 bg-blue-90 text-blue-600 font-black uppercase tracking-widest text-[10px] border border-blue-600 rounded-2xl flex items-center justify-center gap-2"
           >
             Manage Schedule Post <ArrowRight className="w-4 h-4" />

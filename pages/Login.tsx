@@ -45,7 +45,7 @@ const Login: React.FC = () => {
       <div className="max-w-md w-full">
         <div className="text-center mb-10">
           <div 
-            onClick={() => window.location.hash = '#/'}
+            onClick={() => window.location.pathname = '/'}
             className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl mb-6 shadow-xl shadow-blue-500/20 cursor-pointer hover:scale-110 transition-transform"
           >
             <Send className="text-white w-8 h-8" />
@@ -120,7 +120,7 @@ const Login: React.FC = () => {
             Secured with Enterprise JWT & OAuth 2.0
           </p>
           <button 
-            onClick={() => window.location.hash = '#/'}
+            onClick={() => window.location.pathname = '/'}
             className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-600 hover:text-blue-500 transition-colors"
           >
             ← Return to Landing Page

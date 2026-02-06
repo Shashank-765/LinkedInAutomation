@@ -1,0 +1,39 @@
+
+const mongoose = require('mongoose');
+
+const UserSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  role: { type: String, enum: ['SUPER_ADMIN', 'ADMIN', 'USER'], default: 'USER' },
+  planId: { type: mongoose.Schema.Types.ObjectId, ref: 'Plan' },
+  status: { type: String, enum: ['active', 'suspended'], default: 'active' },
+  companyName: { type: String, default: '' },
+  industry: { type: String, default: '' },
+  postTypePreference: { type: String, default: 'Educational' },
+  
+  // LinkedIn OAuth Integration
+  linkedInConnected: { type: Boolean, default: false },
+  linkedInProfile: {
+    urn: { type: String },
+    firstName: { type: String },
+    lastName: { type: String },
+    profilePicture: { type: String },
+    accessToken: { type: String } // Cryptographic token for API calls
+  },
+
+  // Stripe Integration Fields
+  stripeCustomerId: { type: String },
+  stripeSubscriptionId: { type: String },
+  subscriptionStatus: { type: String }, 
+
+  usage: {
+    aiGenerationsThisMonth: { type: Number, default: 0 },
+    aiImagesThisMonth: { type: Number, default: 0 },
+    scheduledToday: { type: Number, default: 0 },
+    lastResetDate: { type: Date, default: Date.now }
+  },
+  createdAt: { type: Date, default: Date.now }
+});
+
+module.exports = mongoose.model('User', UserSchema);

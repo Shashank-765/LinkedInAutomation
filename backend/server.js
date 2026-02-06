@@ -10,6 +10,8 @@ const paymentRoutes = require('./src/routes/payment.routes.js');
 const { autoPostJob } = require('./src/jobs/autopost.job.js');
 const adRoutes = require('./src/routes/ads.routes.js'); // Added
 require('./src/models/User.js').createDefaultAdmin(); // Ensure default admin exists
+const dotenv = require('dotenv');
+dotenv.config();
 
 
 const app = express();
@@ -51,5 +53,5 @@ cron.schedule("*/1 * * * *", () => {
   autoPostJob();
 });
 
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT ;
 app.listen(PORT, () => console.log(`🚀 LinkAutomate Backend running on port ${PORT}`));

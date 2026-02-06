@@ -6,7 +6,7 @@ export class AIService {
 
   constructor() {
     this.client = new OpenAI({
-      apiKey: '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',
+      apiKey: process.env.OPENAI_API_KEY,
       dangerouslyAllowBrowser: true 
     });
   }

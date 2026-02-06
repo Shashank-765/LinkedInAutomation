@@ -3,6 +3,8 @@ const fs = require("fs");
 const path = require("path");
 const PDFDocument = require("pdfkit");
 const sharp = require("sharp");
+const dotenv = require('dotenv');
+dotenv.config();
 
 /* ================= CONFIG ================= */
 
@@ -16,11 +18,11 @@ const getHeaders = (token) => ({
 });
 
 const getLinkedInConfig = () => ({
-  CLIENT_ID: process.env.LINKEDIN_CLIENT_ID || '867r7zntr4hqtf',
-  CLIENT_SECRET: process.env.LINKEDIN_CLIENT_SECRET || 'WPL_AP1.LgX8x1dHyeFS1MBq.DsdPTQ==',
+  CLIENT_ID: process.env.LINKEDIN_CLIENT_ID ,
+  CLIENT_SECRET: process.env.LINKEDIN_CLIENT_SECRET ,
   // Standard clean path for OAuth redirects.
   // CRITICAL: This must match EXACTLY what is registered in your LinkedIn App settings.
-  REDIRECT_URI: process.env.LINKEDIN_REDIRECT_URI || 'http://localhost:3000/',
+  REDIRECT_URI: process.env.LINKEDIN_REDIRECT_URI,
   SCOPES: 'openid r_verify profile r_profile_basicinfo email w_member_social'
 });
 

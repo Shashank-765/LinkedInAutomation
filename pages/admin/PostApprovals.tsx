@@ -160,7 +160,7 @@ const PostApprovals: React.FC = () => {
 
   // LinkedIn Preview Component
   const LinkedInPreview = ({ content, images }: { content: string, images: string[] }) => (
-    <div className={`bg-white dark:bg-slate-900 border dark:border-slate-700 shadow-sm transition-all duration-500 overflow-hidden ${activeView === 'MOBILE' ? 'max-w-[340px] mx-auto rounded-[2.5rem]' : 'w-full rounded-xl'}`}>
+    <div className={`bg-white dark:bg-slate-900 border dark:border-slate-700 shadow-sm transition-all duration-500 custom-scrollbar overflow-y-auto ${activeView === 'MOBILE' ? 'max-w-[340px] max-h-[600px] mx-auto rounded-[2.5rem]' : 'w-[700px] mx-auto rounded-2xl'}`}>
       <div className="p-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="w-10 h-10 rounded-full bg-slate-200 overflow-hidden flex-shrink-0">
@@ -376,7 +376,7 @@ const PostApprovals: React.FC = () => {
                           <button onClick={() => setActiveView('MOBILE')} className={`p-1.5 rounded-lg transition-all ${activeView === 'MOBILE' ? 'bg-white dark:bg-slate-800 shadow-sm text-blue-600' : 'text-slate-400'}`}><Smartphone className="w-3.5 h-3.5"/></button>
                        </div>
                     </div>
-                    <div className="flex-1 bg-slate-50 dark:bg-slate-900/40 rounded-[2.5rem] p-6 lg:p-8 flex items-center justify-center overflow-y-auto">
+                    <div className="flex-1 bg-slate-50 dark:bg-slate-900/40 rounded-[2.5rem] p-6 lg:p-8 flex items-center justify-center  overflow-y-auto">
                       <LinkedInPreview content={isEditing ? editContent : selectedPost.content} images={selectedPost.images || []} />
                     </div>
                  </div>

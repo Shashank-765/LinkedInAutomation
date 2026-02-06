@@ -1,6 +1,8 @@
 
 const jwt = require('jsonwebtoken');
-const JWT_SECRET = process.env.JWT_SECRET || 'linkautomate_secret_key_2025';
+const dotenv = require('dotenv');
+dotenv.config();
+const JWT_SECRET = process.env.JWT_SECRET ;
 
 module.exports = function(req, res, next) {
   const token = req.header('Authorization')?.replace('Bearer ', '');

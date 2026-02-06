@@ -18,6 +18,7 @@ import { ToastContainer } from 'react-toastify';
 import LandingPage from './pages/LandingPage';
 import NotFoundPage from './pages/404';
 
+
 const Router: React.FC = () => {
   const { isAuthenticated } = useAuth();
   const [route, setRoute] = React.useState(window.location.hash || '#/');

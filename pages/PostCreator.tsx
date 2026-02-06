@@ -181,7 +181,7 @@ const PostCreator: React.FC = () => {
 
   // ===== PREVIEW COMPONENT (UNCHANGED) =====
    const LinkedInPreview = ({ content, images }: { content: string, images: string[] }) => (
-    <div className={`bg-white dark:bg-slate-900 border dark:border-slate-700 shadow-2xl transition-all duration-500 overflow-hidden ${activeView === 'MOBILE' ? 'max-w-[340px] mx-auto rounded-[3rem] border-8 border-slate-200 dark:border-slate-800' : 'w-full rounded-2xl'}`}>
+    <div className={`bg-white dark:bg-slate-900 border dark:border-slate-700 shadow-2xl transition-all duration-500 custom-scrollbar overflow-y-auto ${activeView === 'MOBILE' ? 'max-w-[340px] max-h-[600px] mx-auto rounded-[3rem] border-8 border-slate-200 dark:border-slate-800' : 'w-[700px] mx-auto rounded-2xl'}`}>
       <div className="p-4 flex items-center justify-between border-b dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
         <div className="flex items-center gap-2">
           <div className="w-10 h-10 rounded-full bg-slate-200 overflow-hidden border dark:border-slate-700">

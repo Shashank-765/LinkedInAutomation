@@ -126,7 +126,7 @@ const Settings: React.FC = () => {
                      <Linkedin className="w-10 h-10 text-slate-200" />
                   </div>
                   <div className="text-left max-w-md">
-                     <p className="text-xl font-black text-slate-900 dark:text-white uppercase tracking-tighter">Handshake Required</p>
+                     <p className="text-xl font-black text-slate-900 dark:text-white uppercase tracking-tighter">COnnect To Your LInkedin</p>
                      <p className="text-sm text-slate-500 dark:text-slate-400 font-medium mt-2">To automate posts and pull analytics, you must authorize LinkAutomate to access your LinkedIn professional profile.</p>
                   </div>
                </div>

@@ -10,6 +10,7 @@ const paymentRoutes = require('./src/routes/payment.routes.js');
 const { autoPostJob } = require('./src/jobs/autopost.job.js');
 const adRoutes = require('./src/routes/ads.routes.js'); // Added
 require('./src/models/User.js').createDefaultAdmin(); // Ensure default admin exists
+require('./src/models/Plan.js').defaultPlanCreation(); // Ensure default plans exist
 const dotenv = require('dotenv');
 dotenv.config();
 

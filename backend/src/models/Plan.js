@@ -29,9 +29,9 @@ PlanSchema.statics.defaultPlanCreation = async function() {
         maxAiGenerationsPerMonth: 10,
         maxAiImagesPerMonth: 5,
         maxScheduledPostsPerDay: 3,
-        bulkScheduling: false,
-        autoPilot: false,
-        imageGeneration: false,
+        bulkScheduling: true,
+        autoPilot: true,
+        imageGeneration: true,
         teamMemberLimit: 1
       }
     });

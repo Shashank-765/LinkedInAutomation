@@ -108,6 +108,9 @@ const LandingPage: React.FC = () => {
      <div className =" w-[100%]  overflow-hidden group">
           {ads.length > 0 && (
               <div className="relative w-[70%] m-auto overflow-hidden group">
+                <span className="absolute top-4 left-2 z-10 rounded-full bg-white/20 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-black shadow-md">
+                          Sponsored
+                        </span>
                 <div
                   className="flex transition-transform duration-700 ease-in-out"
                   style={{
@@ -123,9 +126,9 @@ const LandingPage: React.FC = () => {
                       className="min-w-full px-4"
                     >
                       <div className="h-[220px] flex flex-col md:flex-row bg-slate-900 border border-white/5 rounded-[3rem] overflow-hidden hover:border-blue-500/30 transition-all shadow-2xl">
-    
                         {/* IMAGE */}
                         <div className="md:w-[70%] flex items-center justify-center bg-black/10 p-4">
+                         
                           <img
                             src={ad.imageUrl}
                             alt={ad.title}

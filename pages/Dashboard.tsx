@@ -176,8 +176,8 @@ useEffect(() => {
       {/* -------------------- ADS (NEW VIEW) -------------------- */}
       {ads.length > 0 && (
           <div className="relative w-full overflow-hidden group">
-             <span className="absolute top-4 left-4 z-10 rounded-full bg-white/40 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-black shadow-md">
-    Ads
+             <span className="absolute top-4 left-2 z-10 rounded-full bg-white/20 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-black shadow-md">
+    Sponsored
   </span>
             <div
               className="flex transition-transform duration-700 ease-in-out"

@@ -109,8 +109,8 @@ const LandingPage: React.FC = () => {
           {ads.length > 0 && (
               <div className="relative w-[70%] m-auto overflow-hidden group">
                 <span className="absolute top-4 left-2 z-10 rounded-full bg-white/20 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-black shadow-md">
-                          Sponsored
-                        </span>
+                  Sponsored
+                </span>
                 <div
                   className="flex transition-transform duration-700 ease-in-out"
                   style={{

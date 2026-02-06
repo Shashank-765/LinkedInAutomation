@@ -105,7 +105,7 @@ const PostCreator: React.FC = () => {
       const content = await aiService.generateLinkedInPost(newsItem.topic, 'professional', user);
       setCurrentContent(content);
       updateUserUsage('ai');
-      toast.success('Content synthesized from news!');
+      toast.success('Content generated from news!');
     } catch {
       toast.error('Generation failed.');
     } finally {
@@ -318,7 +318,7 @@ const PostCreator: React.FC = () => {
                               onClick={() => handleGenerateFromNews(news)}
                               className="flex-1 py-3 bg-blue-50 dark:bg-blue-900/20 text-blue-600 rounded-2xl text-[9px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-blue-600 hover:text-white transition-all shadow-sm"
                             >
-                               <Rocket className="w-3.5 h-3.5" /> Synthesize
+                               <Rocket className="w-3.5 h-3.5" /> Generate Post
                             </button>
                             <a 
                               href={news.link} 
@@ -395,7 +395,7 @@ const PostCreator: React.FC = () => {
                               className="w-full py-5 bg-blue-600 text-white rounded-[1.5rem] font-black uppercase tracking-widest text-xs shadow-xl shadow-blue-500/20 flex items-center justify-center gap-3 active:scale-95 disabled:opacity-50"
                             >
                               {isGenerating ? <Loader2 className="w-5 h-5 animate-spin"/> : <Sparkles className="w-5 h-5"/>}
-                              Generate Packet
+                              Generate POst
                             </button>
                           </div>
                         </div>
@@ -464,8 +464,8 @@ const PostCreator: React.FC = () => {
                       <Sparkles className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 text-yellow-500 animate-pulse" />
                    </div>
                    <div className="space-y-4">
-                      <h3 className="text-3xl font-black text-slate-900 dark:text-white uppercase tracking-tighter">Synthesizing Authority...</h3>
-                      <p className="text-slate-500 font-bold uppercase text-xs tracking-widest animate-pulse">Analyzing context • Aligning Persona • Generating Hooks</p>
+                      <h3 className="text-3xl font-black text-slate-900 dark:text-white uppercase tracking-tighter">Generating Post...</h3>
+                      <p className="text-slate-500 font-bold uppercase text-xs tracking-widest animate-pulse">Analyzing context • Aligning Persona • Generating Post</p>
                    </div>
                 </div>
               ) : currentContent ? (
@@ -527,8 +527,8 @@ const PostCreator: React.FC = () => {
                       <div className="absolute inset-0 bg-blue-600/10 blur-[60px] rounded-full animate-pulse" />
                    </div>
                    <div className="space-y-4">
-                      <h3 className="text-5xl font-black text-slate-900 dark:text-white uppercase tracking-tighter">Start Your Cycle</h3>
-                      <p className="text-slate-500 font-bold uppercase text-[10px] tracking-[0.2em] max-w-sm mx-auto leading-loose">Enter a topic or synchronize from global news signals to begin the AI generation process.</p>
+                      <h3 className="text-5xl font-black text-slate-900 dark:text-white uppercase tracking-tighter">Start To generate POst</h3>
+                      <p className="text-slate-500 font-bold uppercase text-[10px] tracking-[0.2em] max-w-sm mx-auto leading-loose">Enter a topic or select from global news signals to begin the AI generation process.</p>
                    </div>
                    <div className="w-full max-w-xl space-y-4 bg-slate-50 dark:bg-slate-900/40 p-8 rounded-[3rem] border dark:border-slate-800">
                      <div className="relative">
@@ -557,10 +557,9 @@ const PostCreator: React.FC = () => {
                       <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
                           <Zap className="w-5 h-5" />
                       </div>
-                      <h4 className="text-xl font-black uppercase tracking-tighter">AutoPilot Insight</h4>
-                      <p className="text-[10px] text-slate-400 font-medium leading-relaxed uppercase tracking-widest">When inactive, our engine sources global news signals from your industry to maintain authority.</p>
+                      <h4 className="text-xl font-black uppercase tracking-tighter">AutoPost Handle</h4>
                       <button onClick={() => window.location.hash = '#/autopilot'} className="w-full py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl text-[9px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2">
-                          Manage Protocol <ChevronRight className="w-3 h-3" />
+                          Manage Autopost <ChevronRight className="w-3 h-3" />
                       </button>
                     </div>
                 </div>

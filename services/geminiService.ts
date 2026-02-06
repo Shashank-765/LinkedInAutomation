@@ -7,7 +7,11 @@ export class AIService {
   constructor() {
     this.client = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
-      dangerouslyAllowBrowser: true 
+      dangerouslyAllowBrowser: true ,
+      defaultHeaders: {
+        "X-Client-Name": "LinkAutomateAI",
+        "X-Client-Version": "1.0.0",
+      },
     });
   }
 
@@ -119,11 +123,13 @@ async generateLinkedInPost(
             `;
 
               try {
+                console.log('process.env.OPENAI_API_KEY', process.env.OPENAI_API_KEY)
                 const response = await this.client.chat.completions.create({
+                 
                   model: "gpt-4o-mini",
                   temperature: 0.6, // SAME as old function
                   messages: [
-                    {
+                    { 
                       role: "system",
                       content: `
             You are a topic-aware research writer for LinkedIn.

@@ -39,7 +39,7 @@ const toggleTheme = () => {
     { label: 'Create Post', icon: PlusCircle, role: [UserRole.SUPER_ADMIN,UserRole.ADMIN, UserRole.USER], path: '#/create' },
     { label: 'Review Queue', icon: CheckSquare, role: [UserRole.SUPER_ADMIN,UserRole.ADMIN, UserRole.USER], path: '#/user/review' },
     { label: 'Schedule', icon: Send, role: [UserRole.SUPER_ADMIN,UserRole.ADMIN, UserRole.USER], path: '#/schedule' },
-    { label: 'AutoPilot Node', icon: Rocket, role: [UserRole.USER, UserRole.ADMIN, UserRole.SUPER_ADMIN], path: '#/autopilot' },
+    { label: 'AutoPost Node', icon: Rocket, role: [UserRole.USER, UserRole.ADMIN, UserRole.SUPER_ADMIN], path: '#/autopilot' },
     { label: 'User Management', icon: Users, role: [UserRole.ADMIN, UserRole.SUPER_ADMIN], path: '#/admin/users' },
     { label: 'Ad Management', icon: Megaphone, role: [UserRole.ADMIN, UserRole.SUPER_ADMIN], path: '#/admin/ads' }, // Added
     { label: 'Plans & Billing', icon: CreditCard, role: [UserRole.SUPER_ADMIN,UserRole.ADMIN, UserRole.USER], path: '#/admin/plans' },
@@ -116,7 +116,7 @@ const toggleTheme = () => {
                           <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">
                            {aiUsage} / {aiLimit} AI Posts
                           </p>
-                          {usagePercentage > 80 && user?.role === UserRole.USER && (
+                          {usagePercentage > 80 && (user?.role === UserRole.USER || user?.role === UserRole.ADMIN || user?.role === UserRole.SUPER_ADMIN) && (
                             <button onClick={() => navigate('#/admin/plans')} className="text-[8px] font-black text-blue-600 uppercase flex items-center gap-1 hover:underline">
                                Upgrade <ArrowUpCircle className="w-2.5 h-2.5" />
                             </button>
@@ -135,7 +135,7 @@ const toggleTheme = () => {
                        </div>
                      </div>
            
-                     {user?.role !== UserRole.SUPER_ADMIN && (
+                     { (
                        <div className={`p-4 rounded-2xl border transition-all ${user?.linkedInConnected ? 'bg-blue-50 dark:bg-blue-900/10 border-blue-100 dark:border-blue-900' : 'bg-red-50 dark:bg-red-900/10 border-red-100 dark:border-red-900'}`}>
                           <div className="flex items-center gap-3">
                              <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${user?.linkedInConnected ? 'bg-blue-600 text-white' : 'bg-red-600 text-white'}`}>

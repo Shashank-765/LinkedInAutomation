@@ -17,4 +17,24 @@ const PlanSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
+
+PlanSchema.statics.defaultPlanCreation = async function() {
+  const existingPlan = await this.findOne({ name: 'Free' });
+  if (!existingPlan) {
+    await this.create({
+      name: 'Free',
+      price: 0,
+      stripePriceId: 'price_1Hh1YZ2eZvKYlo2C1Hh1YZ2e',
+      limits: {
+        maxAiGenerationsPerMonth: 10,
+        maxAiImagesPerMonth: 5,
+        maxScheduledPostsPerDay: 3,
+        bulkScheduling: false,
+        autoPilot: false,
+        imageGeneration: false,
+        teamMemberLimit: 1
+      }
+    });
+  }
+};
 module.exports = mongoose.model('Plan', PlanSchema);

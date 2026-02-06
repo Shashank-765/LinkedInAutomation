@@ -146,7 +146,7 @@ useEffect(() => {
       {/* -------------------- Stats -------------------- */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
-          label="Total Packets"
+          label="Total Posts"
           value={stats?.total || 0}
           icon={CheckCircle}
           color="bg-green-500"
@@ -242,7 +242,7 @@ useEffect(() => {
         {/* Chart */}
         <div className="xl:col-span-8 bg-white dark:bg-slate-800 p-10 rounded-[3rem]  shadow-sm">
           <h2 className="text-xl font-black mb-8 uppercase">
-            Generation Velocity
+           POst History Stats
           </h2>
           <div className="h-[350px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -266,7 +266,7 @@ useEffect(() => {
         {/* Queue */}
         <div className="xl:col-span-4 bg-white dark:bg-slate-800 p-10 rounded-[3rem]  shadow-sm">
           <h2 className="text-xl font-black mb-8 uppercase">
-            Temporal Queue
+            Post in Queue 
           </h2>
 
           <div className="space-y-4">
@@ -286,7 +286,7 @@ useEffect(() => {
               ))
             ) : (
               <p className="text-sm text-slate-400 text-center py-10">
-                No Active Packets
+                No Queue Posts
               </p>
             )}
           </div>
@@ -295,7 +295,7 @@ useEffect(() => {
             onClick={() => (window.location.hash = '#/schedule')}
             className="w-full mt-8 py-4 bg-blue-90 text-blue-600 font-black uppercase tracking-widest text-[10px] border border-blue-600 rounded-2xl flex items-center justify-center gap-2"
           >
-            Audit Schedule <ArrowRight className="w-4 h-4" />
+            Manage Schedule Post <ArrowRight className="w-4 h-4" />
           </button>
         </div>
       </div>

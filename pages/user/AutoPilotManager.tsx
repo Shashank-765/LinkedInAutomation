@@ -55,7 +55,7 @@ const AutoPilotManager: React.FC = () => {
     <div className="max-w-5xl mx-auto space-y-10 pb-24 text-left animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <h1 className="text-4xl font-black text-slate-900 dark:text-white uppercase tracking-tighter">AutoPilot Node</h1>
+          <h1 className="text-4xl font-black text-slate-900 dark:text-white uppercase tracking-tighter">Auto Post Manager</h1>
           <p className="text-slate-500 font-medium mt-3">Configure autonomous content generation and sequence logic.</p>
         </div>
         <button 
@@ -120,7 +120,7 @@ const AutoPilotManager: React.FC = () => {
                     />
                  </div>
                  <div className="md:col-span-6 space-y-2">
-                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest px-1">Thematic Topic</label>
+                    <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest px-1">Event Topic or descryption</label>
                     <input 
                       value={newEvent.topic} 
                       onChange={e => setNewEvent({...newEvent, topic: e.target.value})}

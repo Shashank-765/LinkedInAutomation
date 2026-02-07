@@ -13,7 +13,7 @@ const LinkedInCallback: React.FC = () => {
     setStatus('LOADING');
     
     // Robust param parsing
-    const urlParams = new URLSearchParams(window.location.search || window.location.pathname.split('?')[1]);
+    const urlParams = new URLSearchParams(window.location.search || window.location.href.split('?')[1]);
     const code = urlParams.get('code') || (forceSimulate ? 'sim_code_' + Date.now() : null);
     const error = urlParams.get('error');
     
@@ -28,12 +28,12 @@ const LinkedInCallback: React.FC = () => {
       if (response.data && response.data.user) {
         setUser(response.data.user);
         setStatus('SUCCESS');
-        setTimeout(() => {
-          window.location.pathname = '/settings';
-        }, 1500);
+        // setTimeout(() => {
+        //   window.location.pathname = '/settings';
+        // }, 1500);
       }
     } catch (err: any) {
-      console.log('window.location', window.location)
+      // console.log('window.location', window.location)
       console.error("LinkedIn Token Exchange Error:", err);
       setStatus('ERROR');
       setErrorMsg(err.response?.data?.message || "Request failed with status code 401. This often means the LinkedIn token was revoked or is invalid.");
@@ -70,6 +70,12 @@ const LinkedInCallback: React.FC = () => {
               <h2 className="text-2xl font-black text-white uppercase tracking-tighter">Sync Complete</h2>
               <p className="text-slate-400 mt-3 font-medium">Your LinkedIn identity is now verified. Returning to configuration...</p>
             </div>
+            <button 
+                onClick={() => window.location.href = `${window.location.origin}/settings`}
+                className="w-full py-5 bg-slate-700 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] border border-white/5 transition-all"
+               >
+                 Back to Settings
+               </button>
           </>
         )}
 

@@ -28,7 +28,7 @@ const AutoPilotManager: React.FC = () => {
       ...config,
       calendarEvents: [...(config.calendarEvents || []), newEvent]
     });
-    console.log('config', config)
+    // console.log('config', config)
     setNewEvent({ date: '', topic: '' });
   };
 

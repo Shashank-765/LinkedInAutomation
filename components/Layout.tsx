@@ -12,7 +12,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const currentPath = window.location.pathname || '/';
-console.log('isDarkMode', isDarkMode)
+// console.log('isDarkMode', isDarkMode)
 useEffect(() => {
   const savedTheme = localStorage.getItem('theme') || 'dark';
   const isDark = savedTheme === 'dark';

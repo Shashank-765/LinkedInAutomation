@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { User as UserIcon, Shield, Bell, Linkedin, Key, Save, Building, Globe, Target, Loader2, CheckCircle2, AlertCircle, ExternalLink, RefreshCw } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { authApi } from '../../services/api';
@@ -11,7 +11,6 @@ const Settings: React.FC = () => {
   const { user, updateProfile } = useAuth();
   const [isSaving, setIsSaving] = useState(false);
   const [isLinking, setIsLinking] = useState(false);
-  
   const [formData, setFormData] = useState({
     name: user?.name || '',
     email: user?.email || '',
@@ -19,6 +18,15 @@ const Settings: React.FC = () => {
     industry: user?.industry || '',
     postTypePreference: user?.postTypePreference || 'Educational'
   });
+  useEffect(() => {
+    setFormData({
+      name: user?.name || '',
+      email: user?.email || '',
+      companyName: user?.companyName || '',
+      industry: user?.industry || '',
+      postTypePreference: user?.postTypePreference || 'Educational'
+    });
+  }, [user]);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();

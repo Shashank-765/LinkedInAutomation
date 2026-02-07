@@ -30,14 +30,16 @@ const Router: React.FC = () => {
     if (!window.location.pathname) window.location.pathname = '/';
     return () => window.removeEventListener('popstate', handlePathChange);
   }, []);
-  console.log('route', route)
-  console.log(window.location)
+  // console.log('route', route)
+  // console.log(window.location)
 
   if (route === '/home' || route === '/') return <LandingPage />;
   if (!isAuthenticated && route === '/login') return <Login />;
 
   const renderRoute = () => {
-    const isLinkedInCallback = window.location.href.includes('/?code');
+    // console.log('window.location.href', window.location)
+    const isLinkedInCallback = window.location.href.includes('?code');
+    // console.log('isLinkedInCallback', isLinkedInCallback)
     if (isLinkedInCallback) return <LinkedInCallback />;
 
     switch (route) {

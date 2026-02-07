@@ -9,6 +9,7 @@ const adminRoutes = require('./src/routes/admin.routes.js');
 const paymentRoutes = require('./src/routes/payment.routes.js');
 const { autoPostJob } = require('./src/jobs/autopost.job.js');
 const adRoutes = require('./src/routes/ads.routes.js'); // Added
+const aiRoutes = require('./src/routes/ai.routes.js')
 require('./src/models/User.js').createDefaultAdmin(); // Ensure default admin exists
 require('./src/models/Plan.js').defaultPlanCreation(); // Ensure default plans exist
 const dotenv = require('dotenv');
@@ -46,6 +47,7 @@ app.use('/auth', authRoutes);
 app.use('/posts', postRoutes);
 app.use('/admin', adminRoutes);
 app.use('/ads', adRoutes); // Added
+app.use('/ai',aiRoutes);
 
 
 // Scheduling Cron Job (Runs every hour)

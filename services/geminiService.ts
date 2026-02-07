@@ -123,7 +123,7 @@ async generateLinkedInPost(
             `;
 
               try {
-                console.log('process.env.OPENAI_API_KEY', process.env.OPENAI_API_KEY)
+                // console.log('process.env.OPENAI_API_KEY', process.env.OPENAI_API_KEY)
                 const response = await this.client.chat.completions.create({
                  
                   model: "gpt-4o-mini",

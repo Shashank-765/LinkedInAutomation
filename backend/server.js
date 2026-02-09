@@ -13,10 +13,30 @@ const aiRoutes = require('./src/routes/ai.routes.js')
 require('./src/models/User.js').createDefaultAdmin(); // Ensure default admin exists
 require('./src/models/Plan.js').defaultPlanCreation(); // Ensure default plans exist
 const dotenv = require('dotenv');
+
+const fs = require("fs");
+const path = require("path");
+console.log('process.cwd()', process.cwd())
+const uploadRoot = path.join(process.cwd(), "uploads");
+const videoDir = path.join(uploadRoot, "videos");
+console.log('fs.existsSync(videoDir)', fs.existsSync(videoDir))
+if (!fs.existsSync(videoDir)) {
+  fs.mkdirSync(videoDir, { recursive: true });
+  console.log("📁 uploads/videos directory created");
+}
+
+
+
+
+
 dotenv.config();
 
 
 const app = express();
+app.use(
+  "/uploads",
+  express.static(path.join(__dirname, "uploads"))
+);
 
 // Webhook route must be registered BEFORE express.json() 
 // because it needs the raw request body for Stripe signature verification.
@@ -25,6 +45,8 @@ app.use('/payment/webhook', express.raw({ type: 'application/json' }), paymentRo
 // STANDARD MIDDLEWARES
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
+
 app.use(
   cors({
     origin: (origin, cb) => cb(null, true),

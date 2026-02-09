@@ -9,6 +9,18 @@ const LinkedInCallback: React.FC = () => {
   const [status, setStatus] = useState<'LOADING' | 'SUCCESS' | 'ERROR'>('LOADING');
   const [errorMsg, setErrorMsg] = useState('');
 
+
+  const reconnect = async () => {
+     const response = await authApi.getLinkedInLink();
+          //console.log("Redirecting to LinkedIn Auth URL:", response);
+          if (response.data.url) {
+            // 2. Redirect the user to LinkedIn
+            window.location.href = response.data.url;
+          } else {
+            throw new Error("Could not retrieve LinkedIn Auth URL");
+          }
+  }
+
   const handleCallback = async (forceSimulate: boolean = false) => {
     setStatus('LOADING');
     
@@ -109,7 +121,7 @@ const LinkedInCallback: React.FC = () => {
                  Back to Settings
                </button>
                <button 
-                onClick={() => handleCallback(true)}
+                onClick={() => reconnect()}
                 className="w-full py-5 bg-blue-600 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl shadow-blue-500/20 transition-all active:scale-95 flex items-center justify-center gap-2"
                >
                  <Zap className="w-4 h-4" /> Simulate Success

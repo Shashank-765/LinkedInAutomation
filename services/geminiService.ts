@@ -219,7 +219,7 @@ async generateImagesForPost(
               size: "1792x1024",
               quality: "standard",
             });
-
+            console.log('response.data', response.data)
             return response.data.map(img => img.url);
           } catch (error) {
             console.error("Image Generation Error:", error);

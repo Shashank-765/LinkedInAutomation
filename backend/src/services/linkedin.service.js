@@ -3,7 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const PDFDocument = require("pdfkit");
 const sharp = require("sharp");
-const dotenv = require('dotenv');
+const dotenv = require("dotenv");
 dotenv.config();
 
 /* ================= CONFIG ================= */
@@ -14,21 +14,21 @@ const V2_BASE = "https://api.linkedin.com/v2";
 const getHeaders = (token) => ({
   Authorization: `Bearer ${token}`,
   "LinkedIn-Version": "202502",
-  "Content-Type": "application/json"
+  "X-Restli-Protocol-Version": "2.0.0",
+  "Content-Type": "application/json",
 });
 
+
 const getLinkedInConfig = () => ({
-  CLIENT_ID: process.env.LINKEDIN_CLIENT_ID ,
-  CLIENT_SECRET: process.env.LINKEDIN_CLIENT_SECRET ,
-  // Standard clean path for OAuth redirects.
-  // CRITICAL: This must match EXACTLY what is registered in your LinkedIn App settings.
+  CLIENT_ID: process.env.LINKEDIN_CLIENT_ID,
+  CLIENT_SECRET: process.env.LINKEDIN_CLIENT_SECRET,
   REDIRECT_URI: process.env.LINKEDIN_REDIRECT_URI,
-  SCOPES: 'openid r_verify profile r_profile_basicinfo email w_member_social'
+  SCOPES: "openid r_verify profile r_profile_basicinfo email w_member_social",
 });
 
 /* ================= OAUTH ================= */
 
-function getAuthorizationUrl() { 
+function getAuthorizationUrl() {
   const c = getLinkedInConfig();
   return `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${c.CLIENT_ID}&redirect_uri=${encodeURIComponent(
     c.REDIRECT_URI
@@ -36,7 +36,7 @@ function getAuthorizationUrl() {
 }
 
 async function exchangeCodeForToken(code) {
-  const c = await getLinkedInConfig();
+  const c = getLinkedInConfig();
   const res = await axios.post(
     "https://www.linkedin.com/oauth/v2/accessToken",
     null,
@@ -46,9 +46,9 @@ async function exchangeCodeForToken(code) {
         code,
         client_id: c.CLIENT_ID,
         client_secret: c.CLIENT_SECRET,
-        redirect_uri: c.REDIRECT_URI
+        redirect_uri: c.REDIRECT_URI,
       },
-      headers: { "Content-Type": "application/x-www-form-urlencoded" }
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
     }
   );
   return res.data.access_token;
@@ -56,7 +56,7 @@ async function exchangeCodeForToken(code) {
 
 async function getLinkedInProfile(token) {
   const res = await axios.get(`${V2_BASE}/userinfo`, {
-    headers: { Authorization: `Bearer ${token}` }
+    headers: { Authorization: `Bearer ${token}` },
   });
 
   return {
@@ -65,7 +65,7 @@ async function getLinkedInProfile(token) {
     lastName: res.data.family_name || "",
     profilePicture:
       res.data.picture ||
-      `https://api.dicebear.com/7.x/avataaars/png?seed=${res.data.sub}`
+      `https://api.dicebear.com/7.x/avataaars/png?seed=${res.data.sub}`,
   };
 }
 
@@ -73,46 +73,25 @@ async function getLinkedInProfile(token) {
 
 async function getImageBuffer(img) {
   let input;
-  console.log('img', img.length, img.slice(0, 30))
-  
-  try {
-  console.log("Processing image:", img.slice(0, 30) + (img.length > 30 ? "..." : ""));
+
   if (img.startsWith("data:image")) {
     input = Buffer.from(img.split(",")[1], "base64");
   } else if (img.startsWith("http")) {
-    //console.log("Fetching image from URL:", img);
-   const res = await axios.get(img, {
-  responseType: "arraybuffer",
-  headers: {
-    "User-Agent": "Mozilla/5.0",
-    "Accept": "image/*",
-    "Referer": "https://chat.openai.com"
-  },
-  timeout: 10000
-});
-
-    // console.log('res', res)
+    const res = await axios.get(img, {
+      responseType: "arraybuffer",
+      timeout: 10000,
+    });
     input = Buffer.from(res.data);
   } else {
     input = fs.readFileSync(path.resolve(img));
   }
 
-    console.log("Converting image to LinkedIn format...");
-    const buffer = await sharp(input)
-      .rotate()
-      .resize(1080, 1080, { fit: "cover" })
-      .toColorspace("srgb")
-      .png({ compressionLevel: 9 })
-      .toBuffer();
-
-    const meta = await sharp(buffer).metadata();
-    console.log("Image OK:", meta.width, "x", meta.height);
-
-    return buffer;
-  } catch (err) {
-    console.error("Image conversion failed:", err);
-    throw new Error("Invalid image format for LinkedIn");
-  }
+  return sharp(input)
+    .rotate()
+    .resize(1080, 1080, { fit: "cover" })
+    .toColorspace("srgb")
+    .png({ compressionLevel: 9 })
+    .toBuffer();
 }
 
 /* ================= IMAGE POST ================= */
@@ -124,17 +103,17 @@ async function uploadImage(imageBuffer, token, authorUrn) {
     { headers: getHeaders(token) }
   );
 
-  const value = init.data?.value;
-  if (!value?.uploadUrl || !value?.image) {
-    throw new Error("LinkedIn image init failed");
+  const v = init.data?.value;
+  if (!v?.uploadUrl || !v?.image) {
+    throw new Error("Image init failed");
   }
 
-  await axios.put(value.uploadUrl, imageBuffer, {
+  await axios.put(v.uploadUrl, imageBuffer, {
     headers: { "Content-Type": "image/png" },
-    maxBodyLength: Infinity
+    maxBodyLength: Infinity,
   });
 
-  return value.image;
+  return v.image;
 }
 
 async function createImagePost(text, imageUrn, token, authorUrn) {
@@ -145,13 +124,8 @@ async function createImagePost(text, imageUrn, token, authorUrn) {
       commentary: text,
       visibility: "PUBLIC",
       distribution: { feedDistribution: "MAIN_FEED" },
-      content: {
-        media: {
-          id: imageUrn,
-          
-        }
-      },
-      lifecycleState: "PUBLISHED"
+      content: { media: { id: imageUrn } },
+      lifecycleState: "PUBLISHED",
     },
     { headers: getHeaders(token) }
   );
@@ -191,17 +165,14 @@ async function initializeDocumentUpload(token, authorUrn) {
     throw new Error("Document init failed");
   }
 
-  return {
-    uploadUrl: v.uploadUrl,
-    documentUrn: v.document
-  };
+  return { uploadUrl: v.uploadUrl, documentUrn: v.document };
 }
 
 async function uploadPdf(uploadUrl, pdfPath) {
   const buffer = fs.readFileSync(pdfPath);
   await axios.put(uploadUrl, buffer, {
     headers: { "Content-Type": "application/pdf" },
-    maxBodyLength: Infinity
+    maxBodyLength: Infinity,
   });
 }
 
@@ -216,14 +187,180 @@ async function createDocumentPost(text, documentUrn, token, authorUrn) {
       content: {
         media: {
           id: documentUrn,
-          title: "Swipe →"
-        }
+          title: "Swipe →",
+        },
       },
-      lifecycleState: "PUBLISHED"
+      lifecycleState: "PUBLISHED",
     },
     { headers: getHeaders(token) }
   );
 }
+
+/* ================= VIDEO SUPPORT (NEW) ================= */
+
+async function getVideoBuffer(video) {
+  if (video.startsWith("http")) {
+    const res = await axios.get(video, {
+      responseType: "arraybuffer",
+      maxBodyLength: Infinity,
+    });
+    return Buffer.from(res.data);
+  }
+  return fs.readFileSync(path.resolve(video));
+}
+
+async function initializeVideoUpload(token, authorUrn, fileSizeBytes) {
+  const res = await axios.post(
+    `${REST_BASE}/videos?action=initializeUpload`,
+    {
+      initializeUploadRequest: {
+        owner: authorUrn,
+        fileSizeBytes,
+      },
+    },
+    { headers: getHeaders(token) }
+  );
+  console.log('res.data', res.data)
+  const v = res.data?.value;
+
+  if (!v?.video || !Array.isArray(v.uploadInstructions)) {
+    throw new Error("Video init failed");
+  }
+
+  return {
+    videoUrn: v.video,
+    uploadToken: v.uploadToken,
+    uploadInstructions: v.uploadInstructions,
+  };
+}
+
+function extractSignedPartId(uploadUrl) {
+  const match = uploadUrl.match(/uploadedVideo\/([^?]+)/);
+  if (!match) {
+    throw new Error("Signed chunk ID not found");
+  }
+  return match[1];
+}
+
+
+
+async function uploadVideoMultipart(uploadInstructions, buffer) {
+const uploadedPartIds = [];
+
+for (const part of uploadInstructions) {
+  const chunk = buffer.slice(part.firstByte, part.lastByte + 1);
+
+ let data =  await axios.put(part.uploadUrl, chunk, {
+    headers: {
+      "Content-Type": "application/octet-stream",
+      "Content-Length": chunk.length,
+    },
+  });
+  // console.log('data', data)
+
+  uploadedPartIds.push(data.headers.etag);
+}
+
+
+
+ 
+  return uploadedPartIds;
+}
+
+
+
+
+async function createVideoPost(text, videoUrn, token, authorUrn) {
+  console.log('videoUrn', videoUrn)
+
+   return axios.post(
+    `${REST_BASE}/posts`,
+    {
+      author: authorUrn,
+      commentary: text,
+      visibility: "PUBLIC",
+      distribution: { feedDistribution: "MAIN_FEED" },
+      content: {
+        media: {
+          id: videoUrn,
+          title: "Play",
+        },
+      },
+      lifecycleState: "PUBLISHED",
+    },
+    { headers: getHeaders(token) }
+  );
+}
+
+async function waitForVideoReady(videoUrn, token, timeoutMs = 600000000000) {
+  const start = Date.now();
+
+  while (true) {
+    const res = await axios.get(
+      `${REST_BASE}/videos/${encodeURIComponent(videoUrn)}`,
+      { headers: getHeaders(token) }
+    );
+console.log('res.data?.value', res.data)
+    const status = res.data?.status;
+    console.log("🎬 Video status:", status);
+
+    if (status === "AVAILABLE") return;
+
+    if (Date.now() - start > timeoutMs) {
+      throw new Error("Video processing timed out");
+    }
+
+    await new Promise((r) => setTimeout(r, 3000));
+  }
+}
+
+async function finalizeVideoUpload(videoUrn, uploadToken, uploadedPartIds, token) {
+  await axios.post(
+    `${REST_BASE}/videos?action=finalizeUpload`,
+    {
+      finalizeUploadRequest: {
+        video: videoUrn,
+        uploadToken,
+        uploadedPartIds,
+      },
+    },
+    { headers: getHeaders(token) }
+  );
+
+  console.log("🎬 Video upload finalized");
+}
+
+
+
+
+async function postLinkedInVideo(text, video, token, authorUrn) {
+  const buffer = await getVideoBuffer(video);
+
+  const {
+    videoUrn,
+    uploadToken,
+    uploadInstructions,
+  } = await initializeVideoUpload(token, authorUrn, buffer.length);
+
+  const uploadedPartIds = await uploadVideoMultipart(
+    uploadInstructions,
+    buffer
+  );
+
+  await finalizeVideoUpload(
+    videoUrn,
+    uploadToken,
+    uploadedPartIds,
+    token
+  );
+
+  await waitForVideoReady(videoUrn, token);
+
+  return createVideoPost(text, videoUrn, token, authorUrn);
+}
+
+
+
 
 /* ================= MAIN ENTRY ================= */
 
@@ -233,12 +370,8 @@ async function postLinkedInCarousel(text, images, token, authorUrn) {
   }
 
   if (images.length === 1) {
-    console.log('images', images)
-    console.log("Single image detected, posting as image post.");
     const buffer = await getImageBuffer(images[0]);
-    console.log("Uploading single image..."); 
     const imageUrn = await uploadImage(buffer, token, authorUrn);
-    console.log("Single image uploaded successfully.");
     return createImagePost(text, imageUrn, token, authorUrn);
   }
 
@@ -268,7 +401,7 @@ async function commentOnLinkedInPost(shareUrn, message, token, authorUrn) {
     {
       actor: authorUrn,
       message: { text: message },
-      object: shareUrn
+      object: shareUrn,
     },
     { headers: { Authorization: `Bearer ${token}` } }
   );
@@ -278,9 +411,10 @@ async function commentOnLinkedInPost(shareUrn, message, token, authorUrn) {
 
 module.exports = {
   postLinkedInCarousel,
+  postLinkedInVideo,
   likeLinkedInPost,
   commentOnLinkedInPost,
   getLinkedInProfile,
   getAuthorizationUrl,
-  exchangeCodeForToken
+  exchangeCodeForToken,
 };

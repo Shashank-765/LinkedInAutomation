@@ -55,11 +55,16 @@ const PostApprovals: React.FC = () => {
       setLoading(false);
     }
   };
+function localISOString() {
+  const now: any = new Date();
+  const tzOffset = now.getTimezoneOffset() * 60000; // offset in ms
+  return new Date(now - tzOffset).toISOString().slice(0, -1);
+}
 
   const handlePostNow = async (id: string) => {
     setIsProcessing(true);
     try {
-      await postApi.updateStatus(id, PostStatus.POSTED);
+      await postApi.updateStatus(id, PostStatus.SCHEDULED, localISOString());
       setPosts(prev => prev.filter(p => p._id !== id));
       setSelectedPost(null);
       toast.success('🚀 Published Successfully!');
@@ -348,24 +353,68 @@ const PostApprovals: React.FC = () => {
                       )}
                     </div>
                     
-                    <div className="space-y-4">
-                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1 flex items-center gap-2"><ImageIcon className="w-4 h-4 text-indigo-500"/> Visual Assets ({selectedPost.images?.length || 0})</label>
+                   <div className="space-y-4">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1 flex items-center gap-2">
+                        <ImageIcon className="w-4 h-4 text-indigo-500" />
+                        Visual Assets
+                        {selectedPost.video
+                          ? " (1 Video)"
+                          : ` (${selectedPost.images?.length || 0})`}
+                      </label>
+
                       <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-hide">
-                         {selectedPost.images && selectedPost.images.map((img, i) => (
-                           <div key={i} className="relative group shrink-0">
-                              <img src={img} className="w-24 h-24 rounded-2xl object-cover border-2 border-white dark:border-slate-700 shadow-sm" alt="Asset" />
+
+                        {/* 🎥 VIDEO (priority) */}
+                        {selectedPost.video ? (
+                          <div className="relative shrink-0">
+                            <video
+                              controls
+                              className="w-64 h-40 rounded-2xl object-cover border-2 border-white dark:border-slate-700 shadow-sm bg-black"
+                            >
+                              <source src={selectedPost.video} type="video/mp4" />
+                              Your browser does not support the video tag.
+                            </video>
+
+                            <div className="absolute inset-0 bg-blue-600/10 opacity-0 hover:opacity-100 transition-opacity rounded-2xl flex items-center justify-center pointer-events-none">
+                              <Eye className="w-6 h-6 text-white" />
+                            </div>
+                          </div>
+
+                        /* 🖼️ IMAGES */
+                        ) : selectedPost.images?.length > 0 ? (
+                          selectedPost.images.map((img: string, i: number) => (
+                            <div key={i} className="relative group shrink-0">
+                              <img
+                                src={img}
+                                className="w-24 h-24 rounded-2xl object-cover border-2 border-white dark:border-slate-700 shadow-sm"
+                                alt="Asset"
+                              />
                               <div className="absolute inset-0 bg-blue-600/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl flex items-center justify-center pointer-events-none">
                                 <Eye className="w-6 h-6 text-white" />
                               </div>
-                           </div>
-                         ))}
-                         {/* Added missing Plus icon to imports from lucide-react */}
-                         <div className="w-24 h-24 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center text-slate-300 gap-1 shrink-0">
+                            </div>
+                          ))
+
+                        /* 🚫 EMPTY STATE */
+                        ) : (
+                          <div className="w-full py-10 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center text-slate-400">
+                            <ImageIcon className="w-6 h-6 mb-2" />
+                            <p className="text-[10px] font-black uppercase tracking-widest">
+                              No Visual Assets
+                            </p>
+                          </div>
+                        )}
+
+                        {/* ➕ Add More (only when images exist, not video) */}
+                        {!selectedPost.video && selectedPost.images?.length > 0 && (
+                          <div className="w-24 h-24 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center text-slate-300 gap-1 shrink-0">
                             <Plus className="w-5 h-5" />
                             <span className="text-[8px] font-black uppercase">Add More</span>
-                         </div>
+                          </div>
+                        )}
                       </div>
                     </div>
+
                  </div>
 
                  <div className="space-y-6 flex flex-col h-full">

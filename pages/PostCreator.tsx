@@ -39,20 +39,28 @@ const PostCreator: React.FC = () => {
   const [isLoadingNews, setIsLoadingNews] = useState(false);
   const [currentContent, setCurrentContent] = useState('');
   const [currentImages, setCurrentImages] = useState<string[]>([]);
+  const [currentVideo, setCurrentVideo] = useState<string>('');
+  const [selectedVideoFile,setSelectedVideoFile] = useState<string>('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [isDrafting, setIsDrafting] = useState(false);
   const [activeView, setActiveView] = useState<'DESKTOP' | 'MOBILE'>('MOBILE');
   const [activeTab, setActiveTab] = useState<'CANVAS' | 'PREVIEW'>('CANVAS'); 
   const [suggestedTab, setSuggestedTab] = useState<'AI' | 'NEWS'>('NEWS');
   const [imageCount, setImageCount] = useState(1);
-
+  console.log('user?.industry', user?.industry)
   // ===== EFFECTS (UNCHANGED) =====
+  console.log('currentVideo', currentVideo)
   useEffect(() => {
     fetchTrendingNews(searchQuery);
   }, []);
-
+  useEffect(() => { 
+    if (user?.industry) {
+      setSearchQuery(user?.industry);
+      setIndustry(user?.industry);
+    }
+  }, [user?.industry]);
   useEffect(() => {
-    if (currentContent) setActiveTab('PREVIEW');
+    if (currentContent) setActiveTab('CANVAS');
   }, [currentContent]);
 
   useEffect(() => {
@@ -118,7 +126,7 @@ const PostCreator: React.FC = () => {
         toast.error("AI image generation limit reached for your plan.");
         return;
       }
-    if (!topic) return toast.info('Please enter a topic.');
+    // if (!topic) return toast.info('Please enter a topic.');
     setIsGenerating(true);
     try {
       const content = await aiService.generateLinkedInPost(topic, 'professional', user);
@@ -159,25 +167,38 @@ const PostCreator: React.FC = () => {
 
  
 
-  const handleSaveToQueue = async () => {
-    if (!currentContent) return;
-    setIsDrafting(true);
-    try {
-      await postApi.save({
-        topic: topic || 'Generated Draft',
-        content: currentContent,
-        images: currentImages,
-        imageSource: currentImages.length ? 'AI' : 'NONE',
-        status: PostStatus.PENDING
-      });
-      toast.success('Added to Review Queue');
-      setCurrentContent('');
-      setCurrentImages([]);
-      setTopic('');
-    } finally {
-      setIsDrafting(false);
+ const handleSaveToQueue = async () => {
+  if (!currentContent) return;
+
+  setIsDrafting(true);
+  try {
+    const formData = new FormData();
+    formData.append("topic", topic || "Generated Draft");
+    formData.append("content", currentContent);
+    formData.append("imageSource", currentImages.length ? "AI" : "NONE");
+    formData.append("status", PostStatus.PENDING);
+
+    currentImages.forEach((img) =>
+      formData.append("images[]", img)
+    );
+
+    console.log('selectedVideoFile', selectedVideoFile)
+    if (selectedVideoFile) {
+      formData.append("video", selectedVideoFile); // REAL FILE
     }
-  };
+
+    await postApi.save(formData);
+
+    toast.success("Added to Review Queue");
+    setCurrentContent("");
+    setCurrentImages([]);
+    setCurrentVideo("");
+    setTopic("");
+  } finally {
+    setIsDrafting(false);
+  }
+};
+
 
   // ===== PREVIEW COMPONENT (UNCHANGED) =====
    const LinkedInPreview = ({ content, images }: { content: string, images: string[] }) => (
@@ -204,6 +225,16 @@ const PostCreator: React.FC = () => {
            <img src={images[0]} className="w-full aspect-video object-cover" alt="Post visual" />
         </div>
       )}
+      {
+        currentVideo && (
+        <div className="bg-slate-100 dark:bg-slate-800 p-4 flex justify-center">
+            <video controls className="w-full max-h-[400px] rounded-2xl bg-black">
+              <source src={currentVideo} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+        </div>
+        )
+      }
       <div className="p-3 border-t dark:border-slate-800 flex items-center justify-around bg-slate-50/30 dark:bg-slate-900/30">
         <button className="flex items-center gap-1 text-slate-500 text-[10px] font-black uppercase"><ThumbsUp className="w-3 h-3"/> Like</button>
         <button className="flex items-center gap-1 text-slate-500 text-[10px] font-black uppercase"><MessageSquare className="w-3 h-3"/> Comment</button>
@@ -503,13 +534,37 @@ const PostCreator: React.FC = () => {
                                 Generate Images
                               </button>
                                               <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+                                                {currentVideo && (
+                                                        <div className="relative group shrink-0">
+                                                          <video
+                                                            src={currentVideo}
+                                                            controls
+                                                            className="w-48 h-28 rounded-2xl object-cover border-2 border-white dark:border-slate-700 shadow-md bg-black"
+                                                          />
+                                                          <button
+                                                            onClick={() => setCurrentVideo('')}
+                                                            className="absolute -top-2 -right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-all shadow-lg"
+                                                          >
+                                                            <X className="w-3 h-3" />
+                                                          </button>
+                                                        </div>
+                                                      )}
+
                                                  {currentImages.map((img, i) => (
                                                    <div key={i} className="relative group shrink-0">
                                                       <img src={img} className="w-24 h-24 rounded-2xl object-cover border-2 border-white dark:border-slate-700 shadow-md" alt="Asset" />
                                                       <button onClick={() => setCurrentImages(prev => prev.filter((_, idx) => idx !== i))} className="absolute -top-2 -right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-all shadow-lg"><X className="w-3 h-3"/></button>
                                                    </div>
                                                  ))}
-                                                 <button onClick={() => fileInputRef.current?.click()} className="w-24 h-24 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center text-slate-400 hover:text-blue-500 hover:border-blue-500 transition-all gap-1"><Plus className="w-5 h-5"/><span className="text-[9px] font-black uppercase">Add</span></button>
+                                                    <button
+                                                      disabled={!!currentVideo}
+                                                      onClick={() => fileInputRef.current?.click()}
+                                                      className={`w-24 h-24 rounded-2xl border-2 border-dashed flex flex-col items-center justify-center gap-1 transition-all
+                                                        ${currentVideo
+                                                          ? 'opacity-40 cursor-not-allowed border-slate-300'
+                                                          : 'border-slate-200 dark:border-slate-700 text-slate-400 hover:text-blue-500 hover:border-blue-500'}
+                                                      `}
+                                                    ></button>
                                               </div>
                                             </div>
                       <button onClick={handleSaveToQueue} disabled={isDrafting} className="w-full py-6 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-[2rem] font-black uppercase tracking-widest text-sm shadow-xl flex items-center justify-center gap-3 active:scale-95 transition-all">
@@ -615,20 +670,38 @@ const PostCreator: React.FC = () => {
 
       {/* file input unchanged */}
       <input
-        type="file"
-        ref={fileInputRef}
-        className="hidden"
-        multiple
-        onChange={(e) => {
-          const files = Array.from(e.target.files || []);
-          files.forEach((file: any) => {
-            const reader = new FileReader();
-            reader.onloadend = () =>
-              setCurrentImages(prev => [...prev, reader.result as string]);
-            reader.readAsDataURL(file);
-          });
-        }}
-      />
+  type="file"
+  ref={fileInputRef}
+  className="hidden"
+  multiple
+  accept="image/*,video/mp4"
+  onChange={(e) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+
+    const file: any = files[0];
+
+    // 🎥 VIDEO
+    if (file?.type.startsWith('video')) {
+      const videoURL = URL.createObjectURL(file);
+      setCurrentImages([]);      // clear images
+      setSelectedVideoFile(file);
+
+      setCurrentVideo(videoURL); // set video
+      return;
+    }
+
+    // 🖼️ IMAGES (existing behavior)
+    setCurrentVideo(''); // clear video
+    files.forEach((file: any) => {
+      const reader = new FileReader();
+      reader.onloadend = () =>
+        setCurrentImages(prev => [...prev, reader.result as string]);
+      reader.readAsDataURL(file);
+    });
+  }}
+/>
+
     </div>
   );
 };

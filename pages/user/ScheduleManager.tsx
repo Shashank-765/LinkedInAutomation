@@ -349,19 +349,44 @@ const ScheduleManager: React.FC = () => {
                           )}
                        </div>
 
-                       <div className="space-y-4">
-                          <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Asset Inventory</h4>
-                          <div className="flex gap-3 flex-wrap">
-                             {viewingPost.images?.length > 0 ? viewingPost.images.map((img: string, i: number) => (
-                               <img key={i} src={img} className="w-24 h-24 rounded-2xl object-cover border dark:border-slate-700 shadow-md hover:scale-110 transition-transform cursor-zoom-in" alt="Post Asset" />
-                             )) : (
-                               <div className="w-full py-10 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center text-slate-400">
-                                  <ImageIcon className="w-6 h-6 mb-2" />
-                                  <p className="text-[10px] font-black uppercase tracking-widest">No Visual Assets</p>
-                               </div>
-                             )}
-                          </div>
-                       </div>
+                       <div className="flex gap-3 flex-wrap">
+
+                                  {/* 🎥 VIDEO (highest priority) */}
+                                  {viewingPost?.video ? (
+                                    <div className="relative">
+                                      <video
+                                              controls
+                                              className="w-64 h-40 rounded-2xl object-cover border dark:border-slate-700 shadow-md bg-black"
+                                            >
+                                              <source src={viewingPost.video} type="video/mp4" />
+                                              Your browser does not support the video tag.
+                                            </video>
+
+                                    </div>
+
+                                  /* 🖼️ IMAGES */
+                                  ) : viewingPost.images?.length > 0 ? (
+                                    viewingPost.images.map((img: string, i: number) => (
+                                      <img
+                                        key={i}
+                                        src={img}
+                                        className="w-24 h-24 rounded-2xl object-cover border dark:border-slate-700 shadow-md hover:scale-110 transition-transform cursor-zoom-in"
+                                        alt="Post Asset"
+                                      />
+                                    ))
+
+                                  /* 🚫 EMPTY STATE */
+                                  ) : (
+                                    <div className="w-full py-10 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center text-slate-400">
+                                      <ImageIcon className="w-6 h-6 mb-2" />
+                                      <p className="text-[10px] font-black uppercase tracking-widest">
+                                        No Visual Assets
+                                      </p>
+                                    </div>
+                                  )}
+
+                                </div>
+
                     </div>
                  </div>
               </div>

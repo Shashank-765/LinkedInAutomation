@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const axios = require('axios');
 const { 
   postLinkedInCarousel, 
+  postLinkedInVideo,
   likeLinkedInPost, 
   commentOnLinkedInPost 
 } = require('../services/linkedin.service.js');
@@ -70,22 +71,33 @@ exports.updateAutoPilotConfig = async (req, res) => {
 exports.savePost = async (req, res) => {
   try {
     const { topic, content, images, imageSource, status, scheduledAt, isAutoPilot } = req.body;
+
+    let videoUrl = null;
+    console.log("====================>",req.file)
+    // ✅ If video file uploaded
+    if (req.file) {
+      videoUrl = `${req.protocol}://${req.get("host")}/uploads/videos/${req.file.filename}`;
+    }
+
     const post = new Post({
       userId: req.user.id,
       topic,
       content,
-      images: images || [],
+      images: images ? JSON.parse(images) : [],
+      video: videoUrl,
       imageSource: imageSource || 'NONE',
       status: status || 'PENDING',
       scheduledAt: scheduledAt ? new Date(scheduledAt) : undefined,
       isAutoPilot: !!isAutoPilot
     });
+
     await post.save();
     res.status(201).json(post);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
+
 
 exports.deployPost = async (req, res) => {
   try {
@@ -96,7 +108,8 @@ exports.deployPost = async (req, res) => {
     if (!user.linkedInConnected || !user.linkedInProfile?.accessToken) {
       return res.status(400).json({ message: "LinkedIn offline" });
     }
-
+    if(post.images && post.images.length > 0){
+      // Deploy carousel post
     const liResponse = await postLinkedInCarousel(post.content, post.images, user.linkedInProfile.accessToken, user.linkedInProfile.urn);
     post.status = 'POSTED';
     post.postedAt = new Date();
@@ -104,6 +117,19 @@ exports.deployPost = async (req, res) => {
     await post.save();
 
     res.json({ success: true, post });
+      } else if(post.video){
+      // Deploy video post
+      const liResponse = await postLinkedInVideo(post.content, post.video, user.linkedInProfile.accessToken, user.linkedInProfile.urn);
+      post.status = 'POSTED';
+      post.postedAt = new Date();
+      post.linkedInPostId = liResponse.headers['x-linkedin-id'] || liResponse.data.id;
+      await post.save();
+
+      res.json({ success: true, post });
+    } else {
+      return res.status(400).json({ message: "No media to post" });
+    }
+    
   } catch (err) {
     res.status(500).json({ message: "Deployment Failed: " + err.message });
   }

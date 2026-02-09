@@ -114,7 +114,12 @@ export const authApi = {
 
 export const postApi = {
   generate: (data: any) => api.post('/posts/generate', data),
-  save: (data: any) => api.post('/posts/save', data),
+  save: (data: FormData) =>
+    api.post('/posts/save', data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }),
   getPending: () => api.get('/posts/pending'),
   updateStatus: (id: string, status: string, scheduledAt?: string) => api.put(`/posts/update/${id}`, { status, scheduledAt }),
   updatePost: (id: string, data: any) => api.put(`/posts/update/${id}`, data),

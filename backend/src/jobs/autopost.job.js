@@ -2,7 +2,7 @@
 const Post = require('../models/Post.js');
 const User = require('../models/User.js');
 const axios = require('axios');
-const { postLinkedInCarousel } = require('../services/linkedin.service.js');
+const { postLinkedInCarousel, postLinkedInVideo } = require('../services/linkedin.service.js');
 const {aiService} = require('../services/geminiServices.js');
 
 // 🔒 NewsAPI Config
@@ -19,7 +19,7 @@ async function autoPostJob() {
       status: { $in: ['SCHEDULED'] },
       scheduledAt: { $lte: now }
     }).populate('userId');
-
+    console.log('pendingPosts', pendingPosts)
     for (const post of pendingPosts) {
       await deployToLinkedIn(post, post.userId);
     }
@@ -100,22 +100,44 @@ async function autoPostJob() {
     console.error("Master AutoPost Job Internal Error:", error);
   }
 }
+function removeBrackets(text) {
+  return text.replace(/[()]/g, "");
+}
 
 async function deployToLinkedIn(post, user) {
-  if (!user || !user.linkedInConnected || !user.linkedInProfile?.accessToken) {
-    post.status = 'FAILED';
-    await post.save();
-    return;
-  }
+  // if (!user || !user.linkedInConnected || !user.linkedInProfile?.accessToken) {
+  //   post.status = 'FAILED';
+  //   await post.save();
+  //   return;
+  // }
   try {
-    const response = await postLinkedInCarousel(post.content, post.images, user.linkedInProfile.accessToken, user.linkedInProfile.urn);
-    post.linkedInPostId = response.headers['x-linkedin-id'] || response.data.id;
+    let response;
+    post.content = removeBrackets(post.content)
+    if (post.images && post.images.length > 0) {
+      post.status = 'PROCESSING';
+        // post.postedAt = new Date();
+        await post.save();
+      console.log('Deploying with images:', post.images);
+       response = await postLinkedInCarousel(post.content, post.images, user.linkedInProfile.accessToken, user.linkedInProfile.urn);
+       post.linkedInPostId = response?.headers['x-linkedin-id'] ;
+      }else{
+        console.log('hello', post.video)
+        post.status = 'PROCESSING';
+        // post.postedAt = new Date();
+        await post.save();
+        response = await postLinkedInVideo(post.content, post.video, user.linkedInProfile.accessToken, user.linkedInProfile.urn);
+        post.linkedInPostId =  response?.headers['x-restli-id'];
+
+    }
+    
+    // console.log('response', response)
     post.status = 'POSTED';
     post.postedAt = new Date();
     await post.save();
   } catch (err) {
+    console.log('err', err)
     console.error(`Deployment failed for post ${post._id}:`, err.message);
-    post.status = 'FAILED';
+    post.status = 'SCHEDULED';
     await post.save();
   }
 }

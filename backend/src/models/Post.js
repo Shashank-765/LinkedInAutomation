@@ -5,7 +5,8 @@ const PostSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   topic: { type: String },
   content: { type: String, required: true },
-  images: [{ type: String }], 
+  images: [{ type: String }],
+  video: { type: String },
   imageSource: { 
     type: String, 
     enum: ['AI', 'UPLOAD', 'NONE'], 
@@ -13,7 +14,7 @@ const PostSchema = new mongoose.Schema({
   },
   status: { 
     type: String, 
-    enum: ['PENDING', 'APPROVED', 'SCHEDULED', 'POSTED', 'FAILED'], 
+    enum: ['PENDING', 'APPROVED', 'SCHEDULED', 'POSTED', 'FAILED','PROCESSING'], 
     default: 'PENDING' 
   },
   

@@ -96,7 +96,7 @@ useEffect(() => {
         setChartData(statsRes.data.chartData);
         setQueue(
           postsRes.data
-            .filter((p: any) => p.status === 'SCHEDULED')
+            .filter((p: any) => p.status === 'SCHEDULED' || p.status === 'PENDING')
             .slice(0, 3)
         );
         setAds(adsRes.data || []);
@@ -154,7 +154,7 @@ useEffect(() => {
           trend="+12% Cycle Growth"
         />
         <StatCard
-          label="Active Queue"
+          label="Scheduled Queue"
           value={stats?.scheduled || 0}
           icon={Clock}
           color="bg-blue-600"
@@ -272,7 +272,7 @@ useEffect(() => {
         {/* Queue */}
         <div className="xl:col-span-4 bg-white dark:bg-slate-800 p-10 rounded-[3rem]  shadow-sm">
           <h2 className="text-xl font-black mb-8 uppercase">
-            Post in Queue 
+            pending or scheduled Post 
           </h2>
 
           <div className="space-y-4">
@@ -280,14 +280,20 @@ useEffect(() => {
               queue.map((post: any) => (
                 <div
                   key={post._id}
-                  className="p-5 rounded-2xl bg-slate-50 hover:bg-slate-100 transition"
+                  className="p-5 rounded-2xl bg-slate-900 hover:bg-slate-100 transition"
                 >
                   <p className="font-black truncate">
                     {post.topic || 'Untitled Post'}
                   </p>
-                  <p className="text-xs text-slate-500 mt-1">
-                    {new Date(post.scheduledAt).toLocaleString()}
-                  </p>
+                  {post.scheduledAt ? (
+                    <p className="text-xs text-slate-700 mt-1">
+                      {new Date(post.scheduledAt).toLocaleString()}
+                    </p>
+                  ) : (
+                    <p className="text-xs text-slate-500 mt-1">
+                      pending
+                    </p>
+                  )}
                 </div>
               ))
             ) : (

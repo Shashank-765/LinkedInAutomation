@@ -37,9 +37,9 @@ const toggleTheme = () => {
   const navItems = [
     { label: 'Dashboard', icon: LayoutDashboard, role: [UserRole.USER, UserRole.ADMIN, UserRole.SUPER_ADMIN], path: '/dashboard' },
     { label: 'Create Post', icon: PlusCircle, role: [UserRole.SUPER_ADMIN,UserRole.ADMIN, UserRole.USER], path: '/create' },
-    { label: 'Review Queue', icon: CheckSquare, role: [UserRole.SUPER_ADMIN,UserRole.ADMIN, UserRole.USER], path: '/user/review' },
-    { label: 'Schedule', icon: Send, role: [UserRole.SUPER_ADMIN,UserRole.ADMIN, UserRole.USER], path: '/schedule' },
-    { label: 'AutoPost Node', icon: Rocket, role: [UserRole.USER, UserRole.ADMIN, UserRole.SUPER_ADMIN], path: '/autopilot' },
+    { label: 'Review Pending Post', icon: CheckSquare, role: [UserRole.SUPER_ADMIN,UserRole.ADMIN, UserRole.USER], path: '/user/review' },
+    { label: 'Post Management', icon: Send, role: [UserRole.SUPER_ADMIN,UserRole.ADMIN, UserRole.USER], path: '/schedule' },
+    { label: 'autopost syncing', icon: Rocket, role: [UserRole.USER, UserRole.ADMIN, UserRole.SUPER_ADMIN], path: '/autopilot' },
     { label: 'User Management', icon: Users, role: [UserRole.ADMIN, UserRole.SUPER_ADMIN], path: '/admin/users' },
     { label: 'Ad Management', icon: Megaphone, role: [UserRole.ADMIN, UserRole.SUPER_ADMIN], path: '/admin/ads' }, // Added
     { label: 'Plans & Billing', icon: CreditCard, role: [UserRole.SUPER_ADMIN,UserRole.ADMIN, UserRole.USER], path: '/admin/plans' },

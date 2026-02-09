@@ -130,7 +130,7 @@ async function deployToLinkedIn(post, user) {
 
     }
     
-    // console.log('response', response)
+    console.log('response', response)
     post.status = 'POSTED';
     post.postedAt = new Date();
     await post.save();

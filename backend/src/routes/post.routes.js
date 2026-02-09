@@ -38,10 +38,6 @@ const conditionalVideoUpload = (req, res, next) => {
     next();
   });
   }
-
-
-  // No file upload → skip multer
-  next();
 };
 
 

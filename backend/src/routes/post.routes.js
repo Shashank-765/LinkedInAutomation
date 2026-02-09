@@ -24,11 +24,22 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
+const conditionalVideoUpload = (req, res, next) => {
+  const contentType = req.headers["content-type"] || "";
+
+  // Only invoke multer if multipart/form-data (file upload)
+  if (contentType.includes("multipart/form-data")) {
+    return upload.single("video")(req, res, next);
+  }
+
+  // No file upload → skip multer
+  next();
+};
 
 
 router.use(authMiddleware);
 
-router.post('/save',upload.single("video"), postController.savePost);
+router.post('/save',conditionalVideoUpload, postController.savePost);
 router.post('/deploy/:id', postController.deployPost);
 router.get('/pending', postController.getPendingPosts);
 router.get('/status', postController.getScheduledPosts);

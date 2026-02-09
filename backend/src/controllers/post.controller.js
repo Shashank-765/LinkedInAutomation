@@ -71,7 +71,7 @@ exports.updateAutoPilotConfig = async (req, res) => {
 exports.savePost = async (req, res) => {
   try {
     const { topic, content, images, imageSource, status, scheduledAt, isAutoPilot } = req.body;
-
+console.log('req.body', req.body)
     let videoUrl = null;
     console.log("====================>",req.file)
     // ✅ If video file uploaded
@@ -83,7 +83,7 @@ exports.savePost = async (req, res) => {
       userId: req.user.id,
       topic,
       content,
-      images: images ? JSON.parse(images) : [],
+      images: images ? JSON.parse(JSON.stringify(images)) : [],
       video: videoUrl,
       imageSource: imageSource || 'NONE',
       status: status || 'PENDING',
@@ -94,6 +94,7 @@ exports.savePost = async (req, res) => {
     await post.save();
     res.status(201).json(post);
   } catch (err) {
+    console.log('err', err)
     res.status(500).json({ message: err.message });
   }
 };

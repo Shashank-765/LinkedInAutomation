@@ -26,11 +26,13 @@ const upload = multer({ storage });
 
 const conditionalVideoUpload = (req, res, next) => {
   const contentType = req.headers["content-type"] || "";
-
+    console.log('contentType', contentType)
   // Only invoke multer if multipart/form-data (file upload)
   if (contentType.includes("multipart/form-data")) {
     return upload.single("video")(req, res, next);
   }
+
+  console.log('done')
 
   // No file upload → skip multer
   next();

@@ -108,12 +108,13 @@ exports.deployPost = async (req, res) => {
     if (!user.linkedInConnected || !user.linkedInProfile?.accessToken) {
       return res.status(400).json({ message: "LinkedIn offline" });
     }
+    
     if(post.images && post.images.length > 0){
       // Deploy carousel post
     const liResponse = await postLinkedInCarousel(post.content, post.images, user.linkedInProfile.accessToken, user.linkedInProfile.urn);
     post.status = 'POSTED';
     post.postedAt = new Date();
-    post.linkedInPostId = liResponse.headers['x-linkedin-id'] || liResponse.data.id;
+    post.linkedInPostId = liResponse?.headers['x-linkedin-id'] || liResponse?.headers['x-restli-id'];
     await post.save();
 
     res.json({ success: true, post });
@@ -122,7 +123,7 @@ exports.deployPost = async (req, res) => {
       const liResponse = await postLinkedInVideo(post.content, post.video, user.linkedInProfile.accessToken, user.linkedInProfile.urn);
       post.status = 'POSTED';
       post.postedAt = new Date();
-      post.linkedInPostId = liResponse.headers['x-linkedin-id'] || liResponse.data.id;
+      post.linkedInPostId = liResponse?.headers['x-linkedin-id'] || liResponse?.headers['x-restli-id'];
       await post.save();
 
       res.json({ success: true, post });

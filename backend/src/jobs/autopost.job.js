@@ -119,14 +119,14 @@ async function deployToLinkedIn(post, user) {
         await post.save();
       console.log('Deploying with images:', post.images);
        response = await postLinkedInCarousel(post.content, post.images, user.linkedInProfile.accessToken, user.linkedInProfile.urn);
-       post.linkedInPostId = response?.headers['x-linkedin-id'] ;
+       post.linkedInPostId = response?.headers['x-linkedin-id'] || response?.headers['x-restli-id'] ;
       }else{
         console.log('hello', post.video)
         post.status = 'PROCESSING';
         // post.postedAt = new Date();
         await post.save();
         response = await postLinkedInVideo(post.content, post.video, user.linkedInProfile.accessToken, user.linkedInProfile.urn);
-        post.linkedInPostId =  response?.headers['x-restli-id'];
+        post.linkedInPostId =  response?.headers['x-restli-id'] || response?.headers['x-linkedin-id'];
 
     }
     

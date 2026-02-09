@@ -55,16 +55,11 @@ const PostApprovals: React.FC = () => {
       setLoading(false);
     }
   };
-function localISOString() {
-  const now: any = new Date();
-  const tzOffset = now.getTimezoneOffset() * 60000; // offset in ms
-  return new Date(now - tzOffset).toISOString().slice(0, -1);
-}
 
   const handlePostNow = async (id: string) => {
     setIsProcessing(true);
     try {
-      await postApi.updateStatus(id, PostStatus.SCHEDULED, localISOString());
+      await postApi.updateStatus(id, PostStatus.SCHEDULED,  new Date().toISOString());
       setPosts(prev => prev.filter(p => p._id !== id));
       setSelectedPost(null);
       toast.success('🚀 Published Successfully!');

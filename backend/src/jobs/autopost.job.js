@@ -137,7 +137,7 @@ async function deployToLinkedIn(post, user) {
   } catch (err) {
     console.log('err', err)
     console.error(`Deployment failed for post ${post._id}:`, err.message);
-    post.status = 'SCHEDULED';
+    post.status = 'FAILED';
     await post.save();
   }
 }

@@ -7,7 +7,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { adApi, adminApi } from '../services/api';
 import { Ad } from '../types';
-import logo from '/assets/darkthemelogo.png'
+import logo from '/assets/darklogo.png'
 
 
 const LandingPage: React.FC = () => {

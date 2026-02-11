@@ -7,7 +7,7 @@ import {
   BarChart3, CheckSquare, Linkedin, ShieldCheck, Zap, Activity, ArrowUpCircle, Rocket, Megaphone
 } from 'lucide-react';
 
-import logo from '/assets/darkthemelogo.png'
+import logo from '/assets/darklogo.png'
 
 // import '../assets'
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {

@@ -51,7 +51,7 @@ const Login: React.FC = () => {
 >
   <div className="">
     <img
-      src="/assets/darkthemelogo.png"
+      src={logo}
       alt="PostPilot AI"
       className="p-8"
     />

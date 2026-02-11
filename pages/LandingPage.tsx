@@ -44,13 +44,19 @@ const LandingPage: React.FC = () => {
   return (
     <div className="bg-slate-950 text-slate-200 min-h-screen font-sans selection:bg-blue-500/30 selection:text-blue-200">
       <nav className="fixed top-0 w-full z-[100] border-b border-white/5 bg-slate-950/80 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div onClick={() => navigateTo()}className="flex items-center gap-2 cursor-pointer">
-            <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
-              <Send className="text-white w-5 h-5" />
-            </div>
-            <span  className="font-black text-2xl text-white uppercase tracking-tighter bold">LinkAutomate</span>
-          </div>
+        <div className="max-w-[1400px] mx-auto  h-20 flex items-center justify-between">
+         <div
+  onClick={() => (window.location.pathname = '/')}
+  className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 cursor-pointer h-20 w-[200px]"
+>
+  <div className="">
+    <img
+      src="/logo/darkthemelogo.png"
+      alt="PostPilot AI"
+      className="px-2"
+    />
+  </div>
+  </div>
           <div className="hidden md:flex items-center gap-10">
             {['Product', 'Enterprise', 'Partners', 'Pricing'].map((item) => (
               <a key={item} href="" className="text-[11px] font-black uppercase tracking-widest text-slate-400 hover:text-white transition-colors">{item}</a>
@@ -76,7 +82,7 @@ const LandingPage: React.FC = () => {
 
       <section className="relative pt-40 pb-20 overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-blue-600/10 blur-[120px] rounded-full -z-10" />
-        <div className="max-w-7xl mx-auto px-6 text-center">
+        <div className=" mx-auto px-10 text-center">
           
           <h1 className="text-5xl md:text-8xl font-black text-white uppercase tracking-tighter leading-[0.9] mb-8 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-100">
             Automate Your <br /> 
@@ -95,19 +101,19 @@ const LandingPage: React.FC = () => {
       {/* Ads Section - Home Placement */}
      {ads.length > 0 && (
   <section className="py-16 relative overflow-hidden bg-slate-900/10">
-    <div className="max-w-7xl mx-auto px-6 mb-8">
-      <div className="flex items-center gap-3">
+    <div className=" mx-auto px-20 mb-8 ">
+      <div className="flex justify-center gap-3">
         <Megaphone className="w-5 h-5 text-blue-500" />
-        <span className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500">
+        <span className="text-[12px] font-black uppercase tracking-[0.4em] text-slate-500">
           Global Opportunities
         </span>
       </div>
     </div>
 
      {/* -------------------- ADS (NEW VIEW) -------------------- */}
-     <div className =" w-[100%]  overflow-hidden group">
+     <div className =" w-[100%] px-10 overflow-hidden group">
           {ads.length > 0 && (
-              <div className="relative w-[70%] m-auto overflow-hidden group">
+              <div className="relative w-[80%] m-auto overflow-hidden group">
                 <span className="absolute top-4 left-2 z-10 rounded-full bg-white/20 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-black shadow-md">
                   Sponsored
                 </span>
@@ -176,93 +182,90 @@ const LandingPage: React.FC = () => {
 
 
 
-      {/* Rest of the Landing Page content remains exactly the same... */}
-      {/* Partner Section, Ecosystem, Bento Grid, etc. */}
-      <section className="py-20 bg-slate-950">
-        <div className="max-w-7xl mx-auto px-6">
-          <p className="text-center text-[10px] font-black uppercase tracking-[0.4em] text-slate-500 mb-12">Visionary Partners & Strategic Sponsors</p>
-          <div className="flex flex-wrap justify-center items-center gap-12 md:gap-20 opacity-30 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700">
-            {['BAstionex', 'Metsspacechain', 'Businessbay', 'NEXUS', 'APEX', 'ZENITH'].map(brand => (
-              <span key={brand} className="text-2xl md:text-3xl font-black text-white tracking-tighter">{brand}</span>
+     {/* ================= PARTNERS ================= */}
+      <section className="py-24 border-y border-white/5">
+        <div className="max-w-[1400px] mx-auto px-6 md:px-10 text-center">
+          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500 mb-12">
+            Visionary Partners & Strategic Sponsors
+          </p>
+
+          <div className="flex flex-wrap justify-center gap-16 opacity-40">
+            {['BAstionex', 'Metsspacechain', 'Businessbay', 'NEXUS', 'APEX', 'ZENITH']
+              .map((brand) => (
+                <span key={brand} className="text-2xl font-black text-white">
+                  {brand}
+                </span>
+              ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ================= ECOSYSTEM CARDS ================= */}
+      <section className="py-32 bg-slate-900/20">
+        <div className="max-w-[1400px] mx-auto px-6 md:px-10 text-center">
+          <h2 className="text-sm font-black text-blue-500 uppercase tracking-widest mb-6">
+            Strategic Ecosystem
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { title: 'Enterprises', icon: Building2 },
+              { title: 'CEOs & Owners', icon: Crown },
+              { title: 'Private Clients', icon: Users },
+              { title: 'Business Leaders', icon: Briefcase },
+            ].map((item, i) => (
+              <div key={i} className="bg-slate-950 border border-white/5 p-10 rounded-3xl hover:border-blue-500 transition">
+                <item.icon className="w-8 h-8 text-blue-500 mb-6" />
+                <h3 className="text-xl font-black text-white uppercase mb-4">{item.title}</h3>
+                <p className="text-slate-500 text-sm">
+                  Centralized content governance and leadership-focused automation tools.
+                </p>
+              </div>
             ))}
           </div>
         </div>
       </section>
-      
 
-      <section className="py-32 bg-slate-900/20">
-        <div className="max-w-7xl mx-auto px-6 text-left">
-          <div className="mb-20">
-            <h2 className="text-sm font-black text-blue-500 uppercase tracking-[0.3em] mb-4">Strategic Ecosystem</h2>
-            <p className="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter">Tailored for Every Tier of Leadership.</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-             <div className="p-10 bg-slate-950 border border-white/5 rounded-[3rem] hover:border-blue-500/50 transition-all group">
-                <div className="w-14 h-14 bg-blue-600/10 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform"><Building2 className="w-7 h-7 text-blue-500" /></div>
-                <h3 className="text-xl font-black text-white uppercase tracking-tighter mb-4">Enterprises</h3>
-                <p className="text-slate-500 text-sm font-medium leading-relaxed">Centralized content governance for global teams and multi-subsidiary brand management.</p>
-             </div>
-             <div className="p-10 bg-slate-950 border border-white/5 rounded-[3rem] hover:border-indigo-500/50 transition-all group">
-                <div className="w-14 h-14 bg-indigo-600/10 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform"><Crown className="w-7 h-7 text-indigo-500" /></div>
-                <h3 className="text-xl font-black text-white uppercase tracking-tighter mb-4">CEOs & Owners</h3>
-                <p className="text-slate-500 text-sm font-medium leading-relaxed">Personal brand synthesis that captures your unique executive voice without the time investment.</p>
-             </div>
-             <div className="p-10 bg-slate-950 border border-white/5 rounded-[3rem] hover:border-purple-500/50 transition-all group">
-                <div className="w-14 h-14 bg-purple-600/10 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform"><Users className="w-7 h-7 text-purple-500" /></div>
-                <h3 className="text-xl font-black text-white uppercase tracking-tighter mb-4">Private Clients</h3>
-                <p className="text-slate-500 text-sm font-medium leading-relaxed">Exclusive high-priority generation and strategic consulting for high-net-worth individuals.</p>
-             </div>
-             <div className="p-10 bg-slate-950 border border-white/5 rounded-[3rem] hover:border-green-500/50 transition-all group">
-                <div className="w-14 h-14 bg-green-600/10 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform"><Briefcase className="w-7 h-7 text-green-500" /></div>
-                <h3 className="text-xl font-black text-white uppercase tracking-tighter mb-4">Business Leaders</h3>
-                <p className="text-slate-500 text-sm font-medium leading-relaxed">Velocity tools built for managers and leaders looking to scale their team's social presence.</p>
-             </div>
-          </div>
+      {/* ================= 3 STEP PROCESS ================= */}
+      <section className="py-28">
+        <div className="max-w-[1200px] mx-auto px-6 md:px-10 grid md:grid-cols-3 gap-16 text-center">
+          {[
+            { step: '01', title: 'Sync Node', icon: Globe },
+            { step: '02', title: 'Synthesize', icon: Sparkles },
+            { step: '03', title: 'Orchestrate', icon: Send },
+          ].map((item, i) => (
+            <div key={i}>
+              <item.icon className="w-10 h-10 text-blue-500 mx-auto mb-6" />
+              <h4 className="text-2xl font-black text-white mb-4">{item.title}</h4>
+              <p className="text-slate-500">Secure and automate your LinkedIn growth engine.</p>
+            </div>
+          ))}
         </div>
       </section>
-       {/* 4. The 3-Step Process */}
-            <section className="py-32 bg-slate-950">
-              <div className="max-w-7xl mx-auto px-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-16 relative">
-                  {/* Connection Line (Desktop) */}
-                  <div className="hidden md:block absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-blue-500/20 to-transparent -z-10" />
-      
-                  {[
-                    { step: '01', title: 'Sync Node', desc: 'Securely link your LinkedIn profile via enterprise-grade OAuth.', icon: Globe },
-                    { step: '02', title: 'Synthesize', desc: 'Define your persona and let Gemini craft high-impact viral content.', icon: Sparkles },
-                    { step: '03', title: 'Orchestrate', desc: 'Approve, schedule, and watch your influence grow automatically.', icon: Send },
-                  ].map((item, idx) => (
-                    <div key={idx} className="flex flex-col items-center text-center group">
-                      <div className="w-20 h-20 bg-slate-950 border border-white/10 rounded-3xl flex items-center justify-center mb-8 shadow-2xl group-hover:border-blue-500 transition-colors relative">
-                        <span className="absolute -top-4 -left-4 text-xs font-black text-blue-500">{item.step}</span>
-                        <item.icon className="w-8 h-8 text-slate-400 group-hover:text-blue-500 transition-colors" />
-                      </div>
-                      <h4 className="text-2xl font-black text-white uppercase tracking-tighter mb-4">{item.title}</h4>
-                      <p className="text-slate-500 font-medium leading-relaxed">{item.desc}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </section>
-       {/* 5. Trust Stats */}
-      <section className="py-20 border-y border-white/5 bg-slate-950">
-        <div className="max-w-7xl mx-auto px-6 flex flex-wrap justify-around gap-12">
+
+      {/* ================= TRUST STATS ================= */}
+      <section className="py-24 border-y border-white/5 text-center">
+        <div className="max-w-[1200px] mx-auto px-6 md:px-10 grid grid-cols-2 md:grid-cols-4 gap-12">
           {[
             { label: 'Posts Generated', val: '500k+' },
             { label: 'Active Users', val: '12k+' },
             { label: 'Uptime', val: '99.9%' },
             { label: 'Growth Multiplier', val: '12x' },
-          ].map((stat, idx) => (
-            <div key={idx} className="text-center">
-              <div className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter mb-2">{stat.val}</div>
-              <div className="text-[10px] font-black text-blue-500 uppercase tracking-widest">{stat.label}</div>
+          ].map((stat, i) => (
+            <div key={i}>
+              <div className="text-4xl font-black text-white">{stat.val}</div>
+              <div className="text-xs font-black text-blue-500 uppercase mt-2">{stat.label}</div>
             </div>
           ))}
         </div>
       </section>
+
+
+
+
       {/* ===================== PRICING SECTION (REPLACED UI ONLY) ===================== */}
       <section className="py-32">
-        <div className="max-w-7xl mx-auto px-6 text-center">
+        <div className="max-w-[1470px] mx-auto px-6 text-center">
           <div className="mb-20">
             <h2 className="text-sm font-black text-blue-500 uppercase tracking-[0.3em] mb-4">
               Pricing Model
@@ -352,14 +355,14 @@ const LandingPage: React.FC = () => {
       {/* ---------------- FOOTER (UNCHANGED) ---------------- */}
       {/* 7. Footer Section */}
             <footer className="py-20 bg-slate-950 border-t border-white/5">
-              <div className="max-w-7xl mx-auto px-6">
+              <div className="max-w-[1470px] mx-auto px-6">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
                   <div className="md:col-span-2 space-y-8">
                      <div className="flex items-center gap-2">
                         <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
                           <Send className="text-white w-5 h-5" />
                         </div>
-                        <span className="font-black text-2xl text-white uppercase tracking-tighter ">LinkAutomate</span>
+                        <span className="font-black text-2xl text-white uppercase tracking-tighter ">Postpilot</span>
                      </div>
                      <p className="text-slate-500 font-medium max-w-xs leading-relaxed">The AI-first operating system for professional growth and LinkedIn influence.</p>
                      <div className="flex gap-4">
@@ -391,7 +394,7 @@ const LandingPage: React.FC = () => {
                 </div>
       
                 <div className="flex flex-col md:flex-row justify-between items-center pt-10 border-t border-white/5 gap-6">
-                   <p className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-600">© 2025 LinkAutomate AI. All Rights Reserved.</p>
+                   <p className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-600">© 2025 Postpilot AI. All Rights Reserved.</p>
                    <div className="flex items-center gap-4">
                       <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                       <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">System Status: Optimal</span>

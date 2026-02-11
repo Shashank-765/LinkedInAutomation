@@ -113,7 +113,7 @@ const AdManagement: React.FC = () => {
   );
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8 pb-20 animate-in fade-in duration-500">
+    <div className="px-10 mx-auto space-y-8 pb-20 animate-in fade-in duration-500">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
         <div>
           <h1 className="text-4xl font-black text-slate-900 dark:text-white uppercase tracking-tighter">Ad Inventory</h1>

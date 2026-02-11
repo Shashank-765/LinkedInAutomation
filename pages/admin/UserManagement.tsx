@@ -122,7 +122,7 @@ const UserManagement: React.FC = () => {
   if (loading) return <div className="h-[60vh] flex flex-col items-center justify-center space-y-4"><Loader2 className="w-12 h-12 text-blue-600 animate-spin" /><p className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">Accessing Directory...</p></div>;
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto">
+    <div className="space-y-8 px-10 mx-auto">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
         <div>
           <h1 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white uppercase tracking-tighter  leading-none">Clients Directory</h1>

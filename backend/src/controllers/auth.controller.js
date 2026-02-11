@@ -9,7 +9,7 @@ const {
   exchangeCodeForToken 
 } = require('../services/linkedin.service.js');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'linkautomate_secret_key_2025';
+const JWT_SECRET = process.env.JWT_SECRET || 'postpilot_secret_key_2025';
 
 exports.register = async (req, res) => {
   try {

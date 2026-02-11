@@ -63,15 +63,30 @@ const toggleTheme = () => {
   return (
     <div className="min-h-screen flex bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white">
       <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800/50 transform transition-transform duration-300 lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div onClick={()=>window.location.pathname = '/'} className="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-800 cursor-pointer">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <Send className="text-white w-5 h-5" />
-            </div>
-            <span className="font-bold text-xl text-slate-800 dark:text-white uppercase tracking-tighter">LinkAutomate</span>
-          </div>
-          <button onClick={() => setIsMobileMenuOpen(false)} className="lg:hidden"><X className="w-6 h-6 dark:text-slate-400" /></button>
-        </div>
+        <div
+  onClick={() => (window.location.pathname = '/')}
+  className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 cursor-pointer h-20"
+>
+  <div className="">
+    <img
+      src="/logo/darkthemelogo.png"
+      alt="PostPilot AI"
+      className="px-5"
+    />
+  </div>
+
+  <button
+    onClick={(e) => {
+      e.stopPropagation();
+      setIsMobileMenuOpen(false);
+    }}
+    className="lg:hidden"
+  >
+    <X className="w-6 h-6 dark:text-slate-400" />
+  </button>
+</div>
+
+
 
         <nav className="p-4 space-y-1 overflow-y-auto max-h-[calc(100vh-250px)]">
           {navItems.filter(item => user && item.role.includes(user.role)).map((item) => (
@@ -164,17 +179,17 @@ const toggleTheme = () => {
       </aside>
 
       <main className="flex-1 lg:ml-64 flex flex-col min-h-screen relative overflow-hidden bg-slate-50 dark:bg-slate-950">
-        <header className="h-20 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 sticky top-0 z-40">
+        <header className="h-20 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 fixed top-0 z-40 w-full">
           <button onClick={() => setIsMobileMenuOpen(true)} className="lg:hidden"><Menu className="w-6 h-6 dark:text-slate-300" /></button>
           <div className="flex-1" />
           <div className="flex items-center gap-6">
-            <button onClick={toggleTheme} className="p-2.5 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors border dark:border-slate-700">
+            {/* <button onClick={toggleTheme} className="p-2.5 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors border dark:border-slate-700">
               {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-            </button>
+            </button> */}
           </div>
         </header>
 
-        <div className="p-6 md:p-10 flex-1 overflow-y-auto">
+        <div className="p-6 md:p-10 flex-1 overflow-y-auto mt-20">
           {children}
         </div>
       </main>

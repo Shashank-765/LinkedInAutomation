@@ -9,7 +9,7 @@ export class AIService {
       apiKey: process.env.OPENAI_API_KEY,
       dangerouslyAllowBrowser: true ,
       defaultHeaders: {
-        "X-Client-Name": "LinkAutomateAI",
+        "X-Client-Name": "PostpilotAI",
         "X-Client-Version": "1.0.0",
       },
     });

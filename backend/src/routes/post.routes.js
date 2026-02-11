@@ -33,7 +33,6 @@ const conditionalVideoUpload = (req, res, next) => {
 
     upload.single("video")(req, res, function (err) {
     if (err) return next(err);
-
     // multer completed successfully (with or without file)
     next();
   });

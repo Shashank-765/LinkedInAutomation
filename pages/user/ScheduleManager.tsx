@@ -136,7 +136,7 @@ const ScheduleManager: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto px-4 pb-20">
+    <div className="space-y-8 px-10 mx-auto px-4 pb-20">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
           <h1 className="text-4xl font-black text-slate-900 dark:text-white uppercase tracking-tighter  leading-none">Posts Overview</h1>
@@ -396,11 +396,11 @@ const ScheduleManager: React.FC = () => {
                   onClick={() => handleDelete(viewingPost._id)} 
                   className="px-8 py-5 bg-red-50 text-red-600 rounded-2xl font-black uppercase tracking-widest text-[10px] flex items-center gap-3 hover:bg-red-100 transition-all active:scale-95"
                  >
-                    <Trash2 className="w-4 h-4" /> Purge Packet
+                    <Trash2 className="w-4 h-4" /> delete post
                  </button>
                  <div className="flex-1" />
                  <button onClick={() => setViewingPost(null)} className="px-14 py-5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-[2rem] font-black uppercase tracking-widest text-[10px] shadow-xl active:scale-95 transition-all">
-                    Dismiss Inspector
+                    closed
                  </button>
               </div>
            </div>

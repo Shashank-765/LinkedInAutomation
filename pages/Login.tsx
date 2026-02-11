@@ -44,18 +44,22 @@ const Login: React.FC = () => {
     <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
       <div className="max-w-md w-full">
         <div className="text-center mb-10">
-          <div 
-            onClick={() => window.location.pathname = '/'}
-            className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl mb-6 shadow-xl shadow-blue-500/20 cursor-pointer hover:scale-110 transition-transform"
-          >
-            <Send className="text-white w-8 h-8" />
-          </div>
-          <h1 className="text-4xl font-bold text-white mb-2 font-display tracking-tight">LinkAutomate AI</h1>
-          <p className="text-slate-400">The Intelligent LinkedIn Growth Engine</p>
+            <div
+  onClick={() => (window.location.pathname = '/')}
+  className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 cursor-pointer h-20"
+>
+  <div className="">
+    <img
+      src="/logo/darkthemelogo.png"
+      alt="PostPilot AI"
+      className="p-8"
+    />
+  </div>
+  </div>
+          {/* <p className="text-slate-400 p-1">The Intelligent LinkedIn Growth Engine</p> */}
         </div>
 
         <div className="bg-slate-800 p-10 rounded-[2.5rem] border border-slate-700 shadow-2xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600/10 blur-3xl -mr-16 -mt-16" />
           
           <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
             {error && (
@@ -96,23 +100,23 @@ const Login: React.FC = () => {
               disabled={loading}
               className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-bold py-4 rounded-2xl flex items-center justify-center gap-2 transition-all shadow-xl shadow-blue-500/25 group"
             >
-              <LogIn className="w-5 h-5 group-hover:translate-x-1 transition-transform" /> {loading ? 'Authorizing...' : 'Sign In'}
+              <LogIn className="w-5 h-8 group-hover:translate-x-1 transition-transform" /> {loading ? 'Authorizing...' : 'Sign In'}
             </button>
           </form>
 
-          <div className="mt-8 pt-6 border-t border-slate-700/50">
+          {/* <div className="mt-8 pt-6 border-t border-slate-700/50">
             <div className="bg-blue-900/20 rounded-2xl p-4 border border-blue-500/20 flex gap-3">
               <Info className="w-5 h-5 text-blue-400 shrink-0" />
               <div className="text-[11px] text-blue-200/70 leading-relaxed text-left">
                 <p className="font-bold text-blue-400 mb-1 uppercase tracking-tighter">Enterprise Access Points:</p>
                 <div className="flex gap-2 mt-1">
-                  <button onClick={() => quickLogin('admin@linkautomate.ai', UserRole.SUPER_ADMIN)} className="underline hover:text-white">Admin Portal</button>
+                  <button onClick={() => quickLogin('admin@postpilot.ai', UserRole.SUPER_ADMIN)} className="underline hover:text-white">Admin Portal</button>
                   <span className="text-slate-600">|</span>
-                  <button onClick={() => quickLogin('user@linkautomate.ai', UserRole.USER)} className="underline hover:text-white">User Portal</button>
+                  <button onClick={() => quickLogin('user@postpilot.ai', UserRole.USER)} className="underline hover:text-white">User Portal</button>
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
 
         <div className="mt-8 flex flex-col items-center gap-4">

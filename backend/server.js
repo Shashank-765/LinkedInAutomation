@@ -79,4 +79,4 @@ cron.schedule("*/1 * * * *", () => {
 });
 
 const PORT = process.env.PORT ;
-app.listen(PORT, () => console.log(`🚀 LinkAutomate Backend running on port ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Postpilot Backend running on port ${PORT}`));

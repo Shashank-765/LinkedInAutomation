@@ -46,7 +46,7 @@ const LandingPage: React.FC = () => {
             <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
               <Send className="text-white w-5 h-5" />
             </div>
-            <span  className="font-black text-2xl text-white uppercase tracking-tighter bold">LinkAutomate</span>
+            <span  className="font-black text-2xl text-white uppercase tracking-tighter bold">Postpilot</span>
           </div>
           
           <div className="hidden md:flex items-center gap-10">
@@ -359,7 +359,7 @@ const LandingPage: React.FC = () => {
                   <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
                     <Send className="text-white w-5 h-5" />
                   </div>
-                  <span className="font-black text-2xl text-white uppercase tracking-tighter ">LinkAutomate</span>
+                  <span className="font-black text-2xl text-white uppercase tracking-tighter ">Postpilot</span>
                </div>
                <p className="text-slate-500 font-medium max-w-xs leading-relaxed">The AI-first operating system for professional growth and LinkedIn influence.</p>
                <div className="flex gap-4">
@@ -391,7 +391,7 @@ const LandingPage: React.FC = () => {
           </div>
 
           <div className="flex flex-col md:flex-row justify-between items-center pt-10 border-t border-white/5 gap-6">
-             <p className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-600">© 2025 LinkAutomate AI. All Rights Reserved.</p>
+             <p className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-600">© 2025 Postpilot AI. All Rights Reserved.</p>
              <div className="flex items-center gap-4">
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                 <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">System Status: Optimal</span>

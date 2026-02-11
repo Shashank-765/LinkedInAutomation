@@ -127,7 +127,7 @@ const Settings: React.FC = () => {
                   </div>
                   <div className="text-left max-w-md">
                      <p className="text-xl font-black text-slate-900 dark:text-white uppercase tracking-tighter">Handshake Required</p>
-                     <p className="text-sm text-slate-500 dark:text-slate-400 font-medium mt-2">To automate posts and pull analytics, you must authorize LinkAutomate to access your LinkedIn professional profile.</p>
+                     <p className="text-sm text-slate-500 dark:text-slate-400 font-medium mt-2">To automate posts and pull analytics, you must authorize Postpilot to access your LinkedIn professional profile.</p>
                   </div>
                </div>
              )}

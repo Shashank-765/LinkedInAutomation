@@ -122,7 +122,7 @@ useEffect(() => {
   const displayAds = shouldAutoScroll ? [...ads, ...ads] : ads;
 
   return (
-    <div className="space-y-10 max-w-7xl mx-auto">
+    <div className="space-y-10 px-10 mx-auto">
 
       {/* -------------------- Header -------------------- */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
@@ -280,9 +280,9 @@ useEffect(() => {
               queue.map((post: any) => (
                 <div
                   key={post._id}
-                  className="p-5 rounded-2xl bg-slate-900 hover:bg-slate-100 transition"
+                  className="p-5 rounded-2xl bg-slate-900 hover:bg-slate-700 transition"
                 >
-                  <p className="font-black truncate">
+                  <p className="font-black ">
                     {post.topic || 'Untitled Post'}
                   </p>
                   {post.scheduledAt ? (

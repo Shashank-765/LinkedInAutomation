@@ -50,7 +50,7 @@ const Login: React.FC = () => {
           >
             <Send className="text-white w-8 h-8" />
           </div>
-          <h1 className="text-4xl font-bold text-white mb-2 font-display tracking-tight">LinkAutomate AI</h1>
+          <h1 className="text-4xl font-bold text-white mb-2 font-display tracking-tight">Postpilot AI</h1>
           <p className="text-slate-400">The Intelligent LinkedIn Growth Engine</p>
         </div>
 
@@ -106,9 +106,9 @@ const Login: React.FC = () => {
               <div className="text-[11px] text-blue-200/70 leading-relaxed text-left">
                 <p className="font-bold text-blue-400 mb-1 uppercase tracking-tighter">Enterprise Access Points:</p>
                 <div className="flex gap-2 mt-1">
-                  <button onClick={() => quickLogin('admin@linkautomate.ai', UserRole.SUPER_ADMIN)} className="underline hover:text-white">Admin Portal</button>
+                  <button onClick={() => quickLogin('admin@postpilot.ai', UserRole.SUPER_ADMIN)} className="underline hover:text-white">Admin Portal</button>
                   <span className="text-slate-600">|</span>
-                  <button onClick={() => quickLogin('user@linkautomate.ai', UserRole.USER)} className="underline hover:text-white">User Portal</button>
+                  <button onClick={() => quickLogin('user@postpilot.ai', UserRole.USER)} className="underline hover:text-white">User Portal</button>
                 </div>
               </div>
             </div>

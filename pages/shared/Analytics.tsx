@@ -25,7 +25,7 @@ const Analytics: React.FC = () => {
   if (loading) return <div className="p-20 flex justify-center"><Loader2 className="w-10 h-10 animate-spin text-blue-600" /></div>;
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto">
+    <div className="space-y-8 px-10 mx-auto">
       <div>
          <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white">Performance Engine</h1>
          <p className="text-slate-500 dark:text-slate-400">Real-time telemetry from your LinkedIn automation cycles.</p>

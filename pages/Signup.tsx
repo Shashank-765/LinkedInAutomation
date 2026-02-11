@@ -62,7 +62,7 @@ const Signup: React.FC = () => {
             </div>
           </div>
           <div className="relative z-10 flex items-center gap-2 text-white/60 text-xs font-bold uppercase tracking-widest">
-             LinkAutomate Platform v2.0
+             postpilot Platform v2.0
           </div>
         </div>
 
@@ -172,7 +172,7 @@ const Signup: React.FC = () => {
               disabled={loading}
               className={`w-full mt-4 py-3.5 rounded-2xl flex items-center justify-center gap-2 transition-all shadow-xl font-bold text-white group ${formData.role === UserRole.SUPER_ADMIN ? 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-500/25' : 'bg-blue-600 hover:bg-blue-700 shadow-blue-500/25'}`}
             >
-              {loading ? 'Finalizing Profile...' : `Join LinkAutomate`} 
+              {loading ? 'Finalizing Profile...' : `Join postpilot`} 
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
           </form>

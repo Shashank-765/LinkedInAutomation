@@ -64,17 +64,35 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <div className={`min-h-screen flex ${isDarkMode ? 'dark bg-slate-950 text-white' : 'bg-slate-50 text-slate-900'}`}>
       <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800/50 transform transition-transform duration-300 lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div onClick={()=>window.location.hash = '#/'} className="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-800">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <Send className="text-white w-5 h-5" />
-            </div>
-            <span className="font-bold text-xl text-slate-800 dark:text-white uppercase tracking-tighter bold ">LinkAutomate</span>
+        <div
+          onClick={() => (window.location.pathname = '/home')}
+          className="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-800 cursor-pointer"
+        >
+          <div className="flex items-center gap-3">
+            {/* Logo */}
+            <img
+              src="/logo/darkthemelogo.png"
+              alt="PostPilot AI"
+              className="w-8 h-8 object-contain"
+            />
+
+            {/* Brand Name (optional) */}
+            <span className="font-bold text-xl text-slate-800 dark:text-white uppercase tracking-tighter">
+              postpilot
+            </span>
           </div>
-          <button onClick={() => setIsMobileMenuOpen(false)} className="lg:hidden">
+
+          <button
+            onClick={(e) => {
+              e.stopPropagation(); // prevent navigation
+              setIsMobileMenuOpen(false);
+            }}
+            className="lg:hidden"
+          >
             <X className="w-6 h-6 dark:text-slate-400" />
           </button>
         </div>
+
 
         <nav className="p-4 space-y-1">
           {navItems.filter(item => user && item.role.includes(user.role)).map((item) => (

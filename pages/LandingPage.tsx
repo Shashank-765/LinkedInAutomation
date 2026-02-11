@@ -7,6 +7,8 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { adApi, adminApi } from '../services/api';
 import { Ad } from '../types';
+import logo from '/assets/darkthemelogo.png'
+
 
 const LandingPage: React.FC = () => {
   const { user, logout } = useAuth();
@@ -51,7 +53,7 @@ const LandingPage: React.FC = () => {
 >
   <div className="">
     <img
-      src="/assets/darkthemelogo.png"
+      src={logo}
       alt="PostPilot AI"
       className="px-2"
     />

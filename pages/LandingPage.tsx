@@ -51,7 +51,7 @@ const LandingPage: React.FC = () => {
 >
   <div className="">
     <img
-      src="/logo/darkthemelogo.png"
+      src="/assets/darkthemelogo.png"
       alt="PostPilot AI"
       className="px-2"
     />

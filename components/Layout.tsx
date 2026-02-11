@@ -7,6 +7,7 @@ import {
   BarChart3, CheckSquare, Linkedin, ShieldCheck, Zap, Activity, ArrowUpCircle, Rocket, Megaphone
 } from 'lucide-react';
 
+// import '../assets'
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, logout } = useAuth();
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -69,7 +70,7 @@ const toggleTheme = () => {
 >
   <div className="">
     <img
-      src="/logo/darkthemelogo.png"
+      src="/assets/darkthemelogo.png"
       alt="PostPilot AI"
       className="px-5"
     />

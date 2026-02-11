@@ -26,9 +26,9 @@ PlanSchema.statics.defaultPlanCreation = async function() {
       price: 0,
       stripePriceId: 'price_1Hh1YZ2eZvKYlo2C1Hh1YZ2e',
       limits: {
-        maxAiGenerationsPerMonth: 10,
-        maxAiImagesPerMonth: 5,
-        maxScheduledPostsPerDay: 3,
+        maxAiGenerationsPerMonth: 5,
+        maxAiImagesPerMonth: 3,
+        maxScheduledPostsPerDay: 5,
         bulkScheduling: true,
         autoPilot: true,
         imageGeneration: true,
@@ -38,3 +38,4 @@ PlanSchema.statics.defaultPlanCreation = async function() {
   }
 };
 module.exports = mongoose.model('Plan', PlanSchema);
+

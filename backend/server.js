@@ -38,6 +38,11 @@ app.use(
   express.static(path.join(__dirname, "uploads"))
 );
 
+
+app.use(express.static(path.join(__dirname, "dist")));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
 // Webhook route must be registered BEFORE express.json() 
 // because it needs the raw request body for Stripe signature verification.
 app.use('/payment/webhook', express.raw({ type: 'application/json' }), paymentRoutes);

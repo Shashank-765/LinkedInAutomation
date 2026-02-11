@@ -19,7 +19,7 @@ exports.handleWebhook = async (req, res) => {
     console.error(`❌ Webhook Signature Verification Failed: ${err.message}`);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
-
+console.log('event', event)
   // Handle the event
   switch (event.type) {
     case 'checkout.session.completed': {
@@ -34,9 +34,12 @@ exports.handleWebhook = async (req, res) => {
               planId: planId,
               stripeCustomerId: session.customer,
               stripeSubscriptionId: session.subscription,
-              subscriptionStatus: 'active'
-            }
-          });
+              subscriptionStatus: 'active',
+              usage: {
+                   aiGenerationsThisMonth: 0,
+                   aiImagesThisMonth: 0
+                   },
+          }});
           console.log(`✅ User ${userId} upgraded to plan ${planId}`);
         } catch (dbErr) {
           console.error('❌ Error updating user plan after checkout:', dbErr);
@@ -78,6 +81,8 @@ exports.handleWebhook = async (req, res) => {
     default:
       console.log(`ℹ️ Unhandled Stripe event type: ${event.type}`);
   }
+
+  console.log('hello')
 
   res.json({ received: true });
 };

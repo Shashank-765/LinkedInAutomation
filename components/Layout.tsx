@@ -45,7 +45,7 @@ const toggleTheme = () => {
     { label: 'autopost syncing', icon: Rocket, role: [UserRole.USER, UserRole.ADMIN, UserRole.SUPER_ADMIN], path: '/autopilot' },
     { label: 'User Management', icon: Users, role: [UserRole.ADMIN, UserRole.SUPER_ADMIN], path: '/admin/users' },
     { label: 'Ad Management', icon: Megaphone, role: [UserRole.ADMIN, UserRole.SUPER_ADMIN], path: '/admin/ads' }, // Added
-    { label: 'Plans & Billing', icon: CreditCard, role: [UserRole.SUPER_ADMIN,UserRole.ADMIN, UserRole.USER], path: '/admin/plans' },
+    { label: 'Plans & Billing', icon: CreditCard, role: [UserRole.SUPER_ADMIN,UserRole.ADMIN], path: '/admin/plans' },
     { label: 'Analytics', icon: BarChart3, role: [UserRole.USER, UserRole.ADMIN, UserRole.SUPER_ADMIN], path: '/analytics' },
     { label: 'Settings', icon: Settings, role: [UserRole.USER, UserRole.ADMIN, UserRole.SUPER_ADMIN], path: '/settings' },
   ];

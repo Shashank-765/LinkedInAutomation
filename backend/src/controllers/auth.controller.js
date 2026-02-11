@@ -140,7 +140,13 @@ exports.updatePlan = async (req, res) => {
 
     const user = await User.findByIdAndUpdate(
       req.user.id,
-      { $set: { planId: plan._id } },
+      { $set: {
+         planId: plan._id, 
+         usage: {
+                   aiGenerationsThisMonth: 0,
+                   aiImagesThisMonth: 0
+                   },
+        } },
       { new: true }
     ).populate('planId').select('-password');
 

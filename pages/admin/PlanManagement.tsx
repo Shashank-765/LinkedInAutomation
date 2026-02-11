@@ -58,6 +58,7 @@ const PlanManagement: React.FC = () => {
     
     setTimeout(async () => {
       try {
+        console.log('update plan')
         await updatePlan(selectedPlanToBuy._id);
         setCheckoutStep('SUCCESS');
       } catch (err) {

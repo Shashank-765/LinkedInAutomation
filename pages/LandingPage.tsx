@@ -94,8 +94,8 @@ const LandingPage: React.FC = () => {
             Enterprise-grade AI content generation, strategic scheduling, and deep performance analytics. Built for high-growth teams and thought leaders.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 animate-in fade-in slide-in-from-bottom-12 duration-700 delay-300">
-            <button onClick={() => navigateTo()} className="w-full sm:w-auto px-10 py-5 bg-blue-600 text-white rounded-[1.5rem] font-black uppercase tracking-widest text-xs shadow-2xl shadow-blue-500/40 flex items-center justify-center gap-3 hover:scale-105 active:scale-95 transition-all">Start Building Now <ArrowRight className="w-4 h-4" /></button>
-            <button onClick={() => navigateTo()} className="w-full sm:w-auto px-10 py-5 bg-white/5 border border-white/10 text-white rounded-[1.5rem] font-black uppercase tracking-widest text-xs hover:bg-white/10 transition-all flex items-center justify-center gap-3"><Linkedin className="w-4 h-4" /> View Live Demo</button>
+            <button onClick={() => navigateTo()} className="w-full sm:w-auto px-10 py-5 bg-blue-600 text-white rounded-[1.5rem] font-black uppercase tracking-widest text-xs shadow-2xl shadow-blue-500/40 flex items-center justify-center gap-3 hover:scale-105 active:scale-95 transition-all">Start Now <ArrowRight className="w-4 h-4" /></button>
+            {/* <button onClick={() => navigateTo()} className="w-full sm:w-auto px-10 py-5 bg-white/5 border border-white/10 text-white rounded-[1.5rem] font-black uppercase tracking-widest text-xs hover:bg-white/10 transition-all flex items-center justify-center gap-3"><Linkedin className="w-4 h-4" /> View Live Demo</button> */}
           </div>
         </div>
       </section>

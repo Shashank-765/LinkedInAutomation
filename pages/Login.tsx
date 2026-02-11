@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { UserRole } from '../types';
 import { Send, LogIn, Info, AlertTriangle } from 'lucide-react';
+import logo from '/assets/darklogo.png'
 
 const Login: React.FC = () => {
   const { login } = useAuth();
@@ -50,7 +51,7 @@ const Login: React.FC = () => {
 >
   <div className="">
     <img
-      src="/logo/darkthemelogo.png"
+      src="/assets/darkthemelogo.png"
       alt="PostPilot AI"
       className="p-8"
     />

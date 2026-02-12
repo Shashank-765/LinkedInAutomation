@@ -57,11 +57,21 @@ exports.getTrendingTopics = async (req, res) => {
 
 exports.updateAutoPilotConfig = async (req, res) => {
   try {
+    console.log('req.body', req.body)
+    let { enabled, industryKeywords, calendarEvents } = req.body
+    let userData = await User.findOne({_id: req.user.id})
     const user = await User.findByIdAndUpdate(
       req.user.id,
-      { $set: { autoPilotConfig: req.body } },
+      { $set: { autoPilotConfig: {
+        enabled:enabled,
+        industryKeywords:industryKeywords,
+        calendarEvents: calendarEvents,
+        urn: userData.activeUrn
+
+      } } },
       { new: true }
     ).select('-password');
+    console.log('user', user)
     res.json(user);
   } catch (err) {
     res.status(500).json({ message: err.message });

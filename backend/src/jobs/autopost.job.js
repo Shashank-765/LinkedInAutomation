@@ -83,6 +83,7 @@ async function autoPostJob() {
           content: finalTopic,
           images: assetUrl ? assetUrl : [],
           imageSource: assetUrl ? 'AI' : 'NONE',
+          linkedinUrn: user.autoPilotConfig.urn,
           status: 'PENDING',
           isAutoPilot: true
         });
@@ -111,6 +112,15 @@ async function deployToLinkedIn(post, user) {
   //   return;
   // }
   try {
+    const linkedInAccount = user.linkedInProfile.find(
+  (profile) => profile.urn === post.linkedinUrn
+);
+
+if (!linkedInAccount) {
+  throw new Error("LinkedIn account not connected for this URN");
+}
+
+const accessToken = linkedInAccount.accessToken;
     let response;
     post.content = removeBrackets(post.content)
     if (post.images && post.images.length > 0) {
@@ -118,14 +128,14 @@ async function deployToLinkedIn(post, user) {
         // post.postedAt = new Date();
         await post.save();
       console.log('Deploying with images:', post.images);
-       response = await postLinkedInCarousel(post.content, post.images, user.linkedInProfile.accessToken, user.linkedInProfile.urn);
+       response = await postLinkedInCarousel(post.content, post.images, accessToken, post.linkedinUrn);
        post.linkedInPostId = response?.headers['x-linkedin-id'] || response?.headers['x-restli-id'] ;
       }else{
         console.log('hello', post.video)
         post.status = 'PROCESSING';
         // post.postedAt = new Date();
         await post.save();
-        response = await postLinkedInVideo(post.content, post.video, user.linkedInProfile.accessToken, user.linkedInProfile.urn);
+        response = await postLinkedInVideo(post.content, post.video, accessToken, post.linkedinUrn);
         post.linkedInPostId =  response?.headers['x-restli-id'] || response?.headers['x-linkedin-id'];
 
     }

@@ -18,6 +18,7 @@ const Settings: React.FC = () => {
     industry: user?.industry || '',
     postTypePreference: user?.postTypePreference || 'Educational'
   });
+  console.log('user', user)
   useEffect(() => {
     setFormData({
       name: user?.name || '',

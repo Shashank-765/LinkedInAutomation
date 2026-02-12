@@ -70,10 +70,13 @@ exports.updateAutoPilotConfig = async (req, res) => {
 
 exports.savePost = async (req, res) => {
   try {
-    const { topic, content, images, imageSource, status, scheduledAt, isAutoPilot } = req.body;
+    const { topic, content, images, imageSource, status, scheduledAt, isAutoPilot, urn } = req.body;
 console.log('req.body', req.body)
     let videoUrl = null;
     console.log("====================>",req.file)
+    if(!urn){
+      return res.status(400).json({message: "Connect to Linkedin account First"})
+        }
     // ✅ If video file uploaded
     if (req.file) {
       videoUrl = `${req.protocol}://${req.get("host")}/uploads/videos/${req.file.filename}`;
@@ -86,6 +89,7 @@ console.log('req.body', req.body)
       images: images ? JSON.parse(JSON.stringify(images)) : [],
       video: videoUrl,
       imageSource: imageSource || 'NONE',
+      linkedinUrn: urn,
       status: status || 'PENDING',
       scheduledAt: scheduledAt ? new Date(scheduledAt) : undefined,
       isAutoPilot: !!isAutoPilot
@@ -106,13 +110,26 @@ exports.deployPost = async (req, res) => {
     const user = await User.findById(req.user.id);
 
     if (!post) return res.status(404).json({ message: "Post not found" });
-    if (!user.linkedInConnected || !user.linkedInProfile?.accessToken) {
+    if (!user.linkedInConnected || !user.activeUrn) {
       return res.status(400).json({ message: "LinkedIn offline" });
     }
 
+    //find accesstoken from as array as per urn 
+// Find matching LinkedIn profile by URN
+const linkedInAccount = user.linkedInProfile.find(
+  (profile) => profile.urn === post.linkedinUrn
+);
+
+if (!linkedInAccount) {
+  throw new Error("LinkedIn account not connected for this URN");
+}
+
+const accessToken = linkedInAccount.accessToken;
+
     if(post.images && post.images.length > 0){
+
       // Deploy carousel post
-    const liResponse = await postLinkedInCarousel(post.content, post.images, user.linkedInProfile.accessToken, user.linkedInProfile.urn);
+    const liResponse = await postLinkedInCarousel(post.content, post.images, accessToken, post.linkedinUrn);
     post.status = 'POSTED';
     post.postedAt = new Date();
     console.log('liResponse', liResponse)
@@ -122,7 +139,7 @@ exports.deployPost = async (req, res) => {
     res.json({ success: true, post });
       } else if(post.video){
       // Deploy video post
-      const liResponse = await postLinkedInVideo(post.content, post.video, user.linkedInProfile.accessToken, user.linkedInProfile.urn);
+      const liResponse = await postLinkedInVideo(post.content, post.video, accessToken, post.linkedinUrn);
       post.status = 'POSTED';
       post.postedAt = new Date();
     console.log('liResponse', liResponse)
@@ -207,8 +224,16 @@ exports.likePost = async (req, res) => {
 
     if (!post || !post.linkedInPostId) return res.status(404).json({ message: "Post not live on LinkedIn" });
     if (!user.linkedInProfile?.accessToken) return res.status(401).json({ message: "LinkedIn node offline" });
+const linkedInAccount = user.linkedInProfile.find(
+  (profile) => profile.urn === post.linkedinUrn
+);
 
-    await likeLinkedInPost(post.linkedInPostId, user.linkedInProfile.accessToken, user.linkedInProfile.urn);
+if (!linkedInAccount) {
+  throw new Error("LinkedIn account not connected for this URN");
+}
+
+const accessToken = linkedInAccount.accessToken;
+    await likeLinkedInPost(post.linkedInPostId, accessToken, post.linkedinUrn);
     
     // Optimistic UI update for metrics
     post.metrics.likes = (post.metrics.likes || 0) + 1;
@@ -229,7 +254,17 @@ exports.commentPost = async (req, res) => {
     if (!post || !post.linkedInPostId) return res.status(404).json({ message: "Post not live" });
     if (!user.linkedInProfile?.accessToken) return res.status(401).json({ message: "LinkedIn node offline" });
 
-    await commentOnLinkedInPost(post.linkedInPostId, message, user.linkedInProfile.accessToken, user.linkedInProfile.urn);
+    const linkedInAccount = user.linkedInProfile.find(
+  (profile) => profile.urn === post.linkedinUrn
+);
+
+if (!linkedInAccount) {
+  throw new Error("LinkedIn account not connected for this URN");
+}
+
+const accessToken = linkedInAccount.accessToken;
+
+    await commentOnLinkedInPost(post.linkedInPostId, message, accessToken, post.linkedinUrn);
     
     post.metrics.comments = (post.metrics.comments || 0) + 1;
     await post.save();
@@ -251,7 +286,16 @@ exports.syncMetrics = async (req, res) => {
     // Ensure we use the user's token for the metrics sync
    // console.log('Syncing metrics for post:', post.linkedInPostId);
     //console.log('Using token for user:', user.linkedInProfile.accessToken);
-    const fullDetails = await getPostFullDetails(post.linkedInPostId, user.linkedInProfile.accessToken);
+    const linkedInAccount = user.linkedInProfile.find(
+  (profile) => profile.urn === post.linkedinUrn
+);
+
+if (!linkedInAccount) {
+  throw new Error("LinkedIn account not connected for this URN");
+}
+
+const accessToken = linkedInAccount.accessToken;
+    const fullDetails = await getPostFullDetails(post.linkedInPostId, accessToken);
     
     post.metrics = {
       likes: fullDetails.stats.likes,

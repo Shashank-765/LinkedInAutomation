@@ -44,11 +44,20 @@ exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
     console.log('first', email, password)
-    const user = await User.findOne({ email }).populate('planId');
+    let user = await User.findOne({ email }).populate('planId');
     if (!user) return res.status(400).json({ message: 'Invalid credentials' });
+    console.log('user', user)
+    console.log(Array.isArray(user.linkedInProfile))
+     if (!Array.isArray(user.linkedInProfile)) {
+       user.linkedInProfile = [user.linkedInProfile]
+      await User.findByIdAndUpdate({_id: user._id}, 
+       ...user
+      )
+     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
+    user.linkedInProfile = user.linkedInProfile.find((d)=> d.urn === user.activeUrn)
 
     const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
     const userResponse = user.toObject();
@@ -62,12 +71,25 @@ exports.login = async (req, res) => {
 
 exports.getMe = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).populate('planId').select('-password');
+    const user = await User.findById(req.user.id)
+      .populate('planId')
+      .select('-password')
+      .lean();   // 🔥 important
+    console.log('user', user)
+    const activeProfile = user.linkedInProfile?.find(
+      (d) => d.urn === user.activeUrn
+    );
+
+    // 👇 Override only in response (NOT DB)
+    user.linkedInProfile = activeProfile || null;
+
     res.json(user);
+
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
+
 
 // Returns the redirect URL for the frontend to open
 exports.getLinkedInLink = async (req, res) => {
@@ -83,35 +105,69 @@ exports.getLinkedInLink = async (req, res) => {
 exports.connectLinkedIn = async (req, res) => {
   try {
     const { code } = req.body;
-    console.log('code', code)
-    // 1. Exchange code for token (Simulation fallback if no code provided for testing)
+
     const accessToken = code 
       ? await exchangeCodeForToken(code) 
       : "AQV_MOCKED_TOKEN_" + Math.random().toString(36).substring(7);
-    console.log('accessToken', accessToken);
-    // 2. Fetch real profile using the new token
-    const profile = await getLinkedInProfile(accessToken);
-    console.log('profile', profile)
-    const user = await User.findByIdAndUpdate(
-      req.user.id,
-      {
-        $set: {
-          linkedInConnected: true,
-          linkedInProfile: {
-            ...profile,
-            accessToken: accessToken
-          }
-        }
-      },
-      { new: true }
-    ).select('-password');
 
-    res.json({ success: true, user });
+    const profile = await getLinkedInProfile(accessToken);
+
+    const user = await User.findById(req.user.id);
+console.log("user", user)
+    // 🔥 Normalize old data
+    if (!Array.isArray(user.linkedInProfile)) {
+      if (user.linkedInProfile) {
+        user.linkedInProfile = [user.linkedInProfile];
+      } else {
+        user.linkedInProfile = [];
+      }
+    }
+
+    const existingIndex = user.linkedInProfile.findIndex(
+      (p) => p.urn === profile.urn
+    );
+    console.log('existingIndex', existingIndex)
+
+    if (existingIndex !== -1) {
+      user.linkedInProfile[existingIndex] = {
+        ...profile,
+        accessToken
+      };
+    } else {
+      user.linkedInProfile.push({
+        ...profile,
+        accessToken
+      });
+    }
+
+    user.activeUrn = profile.urn;
+    user.linkedInConnected = true;
+
+   let data =  await User.findByIdAndUpdate({_id: user._id}, {...user});
+   console.log('data', data)
+
+    const updatedUser = await User.findById(req.user.id)
+      .select("-password")
+      .lean();
+
+    updatedUser.linkedInProfile = updatedUser.linkedInProfile[existingIndex]
+
+    res.json({
+      success: true,
+      user: {
+        ...updatedUser,
+        
+      }
+    });
+
   } catch (err) {
-    // console.log('err', err)
-    res.status(500).json({ message: 'LinkedIn Handshake Failed: ' + err.message });
+    console.log('err', err);
+    res.status(500).json({
+      message: 'LinkedIn Handshake Failed: ' + err.message
+    });
   }
 };
+
 
 exports.disconnectLinkedIn = async (req, res) => {
   try {
@@ -120,7 +176,8 @@ exports.disconnectLinkedIn = async (req, res) => {
       {
         $set: {
           linkedInConnected: false,
-          linkedInProfile: undefined
+          activeUrn: ''
+          // linkedInProfile: undefined
         }
       },
       { new: true }
@@ -149,6 +206,7 @@ exports.updatePlan = async (req, res) => {
         } },
       { new: true }
     ).populate('planId').select('-password');
+    user.linkedInProfile = user.linkedInProfile.find((d)=> d.urn === user?.activeUrn)
 
     res.json(user);
   } catch (err) {

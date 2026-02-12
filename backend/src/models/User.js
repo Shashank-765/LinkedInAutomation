@@ -14,17 +14,13 @@ const UserSchema = new mongoose.Schema({
   
   // LinkedIn OAuth Integration
   linkedInConnected: { type: Boolean, default: false },
-  linkedInProfile: {
-    urn: { type: String },
-    firstName: { type: String },
-    lastName: { type: String },
-    profilePicture: { type: String },
-    accessToken: { type: String } 
-  },
+  activeUrn: {type: String},
+  linkedInProfile: {type: Array, default: []},
 
   // NEW: Autonomous Configuration
   autoPilotConfig: {
     enabled: { type: Boolean, default: false },
+    urn: {type: String},
     industryKeywords: { type: String, default: 'technology' },
     calendarEvents: [{
       date: { type: String }, // YYYY-MM-DD

@@ -20,6 +20,7 @@ const PostSchema = new mongoose.Schema({
   
   // LinkedIn Deployment Data
   linkedInPostId: { type: String }, // Store the 'urn:li:share:xxx' or post ID
+  linkedinUrn: {type: String},
   metrics: {
     likes: { type: Number, default: 0 },
     comments: { type: Number, default: 0 },

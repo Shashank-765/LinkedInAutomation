@@ -175,6 +175,7 @@ const PostCreator: React.FC = () => {
     const formData = new FormData();
     formData.append("topic", topic || "Generated Draft");
     formData.append("content", currentContent);
+    formData.append("urn", user.activeUrn);
     formData.append("imageSource", currentImages.length ? "AI" : "NONE");
     formData.append("status", PostStatus.PENDING);
 

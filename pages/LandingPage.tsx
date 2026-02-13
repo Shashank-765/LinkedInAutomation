@@ -113,7 +113,7 @@ const secondColumn = staticPages.slice(mid);
 
   return (
     <div className="bg-slate-950 text-slate-200 min-h-screen font-sans selection:bg-blue-500/30 selection:text-blue-200">
-      <nav className="fixed top-0 w-full z-[100] border-b border-white/5 bg-slate-950/80 backdrop-blur-xl">
+      <nav className="fixed top-0 w-full z-[100] bg-slate-900 border-b border-white/5 bg-slate-950/80 backdrop-blur-xl">
         <div className="max-w-[1400px] mx-auto  h-20 flex items-center justify-between">
          <div
           onClick={() => (window.location.pathname = '/')}
@@ -264,7 +264,7 @@ const secondColumn = staticPages.slice(mid);
 
 
      {/* ================= PARTNERS ================= */}
-      <section className="py-24 border-y border-white/5">
+      <section className="py-24 border-y bg-slate-900 border-white/5">
         <div className="max-w-[1400px] mx-auto px-6 md:px-10 text-center">
           <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500 mb-12">
             Visionary Partners & Strategic Sponsors
@@ -308,7 +308,7 @@ const secondColumn = staticPages.slice(mid);
       </section>
 
       {/* ================= 3 STEP PROCESS ================= */}
-      <section className="py-28">
+      <section className="py-28 bg-slate-900">
         <div className="max-w-[1200px] mx-auto px-6 md:px-10 grid md:grid-cols-3 gap-16 text-center">
           {[
             { step: '01', title: 'Sync Node', icon: Globe },
@@ -325,7 +325,7 @@ const secondColumn = staticPages.slice(mid);
       </section>
 
       {/* ================= TRUST STATS ================= */}
-      <section className="py-24 border-y border-white/5 text-center">
+      <section className="py-24  border-y border-white/5 text-center">
         <div className="max-w-[1200px] mx-auto px-6 md:px-10 grid grid-cols-2 md:grid-cols-4 gap-12">
           {[
             { label: 'Posts Generated', val: '500k+' },
@@ -345,7 +345,7 @@ const secondColumn = staticPages.slice(mid);
 
 
       {/* ===================== PRICING SECTION (REPLACED UI ONLY) ===================== */}
-      <section className="py-32">
+      <section className="py-32 bg-slate-900">
         <div className="max-w-[1470px] mx-auto px-6 text-center">
           <div className="mb-20">
             <h2 className="text-sm font-black text-blue-500 uppercase tracking-[0.3em] mb-4">
@@ -435,7 +435,7 @@ const secondColumn = staticPages.slice(mid);
 
       {/* ---------------- FOOTER (UNCHANGED) ---------------- */}
       {/* 7. Footer Section */}
-            <footer className="py-20 bg-slate-950 border-t border-white/5">
+            <footer className="py-20 bg-slate-1000 border-t border-white/5">
               <div className="max-w-[1470px] mx-auto px-6">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
                   <div className="md:col-span-2 space-y-8">

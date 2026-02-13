@@ -18,11 +18,19 @@ import LinkedInCallback from './pages/auth/LinkedInCallback';
 import { ToastContainer } from 'react-toastify';
 import LandingPage from './pages/LandingPage';
 import NotFoundPage from './pages/404';
+import { staticPages } from './config/staticPages';
+import StaticPage from './pages/static/StaticPage';
+
 
 
 const Router: React.FC = () => {
   const { isAuthenticated } = useAuth();
   const [route, setRoute] = React.useState(window.location.pathname || '/');
+
+  React.useEffect(() => {
+  window.scrollTo(0, 0);
+}, [location.pathname]);
+
 
   React.useEffect(() => {
     const handlePathChange = () => setRoute(window.location.pathname || '/');
@@ -36,20 +44,30 @@ const Router: React.FC = () => {
   if (route === '/home' || route === '/') return <LandingPage />;
   if (!isAuthenticated && route === '/login') return <Login />;
 
-  const renderRoute = () => {
-    // console.log('window.location.href', window.location)
+  // Dynamic Static Pages
+const matchedStaticPage = staticPages.find(p => p.slug === route);
+if (matchedStaticPage) {
+  return <StaticPage page={matchedStaticPage} />;
+}
+
+ const renderRoute = () => {
     const isLinkedInCallback = window.location.href.includes('?code');
-    // console.log('isLinkedInCallback', isLinkedInCallback)
     if (isLinkedInCallback) return <LinkedInCallback />;
+
+    // Dynamic Static Pages
+    const matchedStaticPage = staticPages.find(p => p.slug === route);
+    if (matchedStaticPage) {
+      return <StaticPage title={matchedStaticPage.title} />;
+    }
 
     switch (route) {
       case '/dashboard': return <Dashboard />;
       case '/create': return <PostCreator />;
-      case '/user/review': return <PostApprovals />; 
+      case '/user/review': return <PostApprovals />;
       case '/schedule': return <ScheduleManager />;
       case '/autopilot': return <AutoPilotManager />;
       case '/admin/users': return <UserManagement />;
-      case '/admin/ads': return <AdManagement />; // Added
+      case '/admin/ads': return <AdManagement />;
       case '/admin/plans': return <PlanManagement />;
       case '/analytics': return <Analytics />;
       case '/settings': return <Settings />;

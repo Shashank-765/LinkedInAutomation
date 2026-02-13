@@ -113,3 +113,14 @@ export interface AuthState {
   token: string | null;
   isAuthenticated: boolean;
 }
+
+
+export interface StaticPageConfig {
+  title: string;
+  slug: string;
+  description: string;
+  features: {
+    title: string;
+    description: string;
+  }[];
+}

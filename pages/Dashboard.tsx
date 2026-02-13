@@ -19,7 +19,6 @@ import {
   ArrowRight,
   Image,
   ExternalLink,
-  
 } from 'lucide-react';
 import api, { adApi } from '../services/api';
 import { Ad } from '../types';
@@ -66,21 +65,79 @@ const Dashboard: React.FC = () => {
   const [ads, setAds] = useState<Ad[]>([]);
   const [loading, setLoading] = useState(true);
 
+  /* ===================== INFINITE ADS LOGIC ===================== */
 
-  /* -------------------- Ads Auto Swap -------------------- */
-const [activeAdIndex, setActiveAdIndex] = useState(0);
-const hasMultipleAds = ads.length > 1;
+  const [activeAdIndex, setActiveAdIndex] = useState(1);
+  const [isTransitioning, setIsTransitioning] = useState(true);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [dragOffset, setDragOffset] = useState(0);
 
-useEffect(() => {
-  if (!hasMultipleAds) return;
+  const hasMultipleAds = ads.length > 1;
 
-  const interval = setInterval(() => {
-    setActiveAdIndex((prev) => (prev + 1) % ads.length);
-  }, 8000);
+  const extendedAds =
+    hasMultipleAds
+      ? [ads[ads.length - 1], ...ads, ads[0]]
+      : ads;
 
-  return () => clearInterval(interval);
-}, [ads.length, hasMultipleAds]);
+  /* Auto Slide */
+  useEffect(() => {
+    if (!hasMultipleAds) return;
 
+    const interval = setInterval(() => {
+      setActiveAdIndex((prev) => prev + 1);
+    }, 6000);
+
+    return () => clearInterval(interval);
+  }, [hasMultipleAds]);
+
+  /* Seamless Reset */
+  const handleTransitionEnd = () => {
+    if (!hasMultipleAds) return;
+
+    if (activeAdIndex === extendedAds.length - 1) {
+      setIsTransitioning(false);
+      setActiveAdIndex(1);
+    }
+
+    if (activeAdIndex === 0) {
+      setIsTransitioning(false);
+      setActiveAdIndex(ads.length);
+    }
+  };
+
+  useEffect(() => {
+    if (!isTransitioning) {
+      requestAnimationFrame(() => {
+        setIsTransitioning(true);
+      });
+    }
+  }, [isTransitioning]);
+
+  /* Drag Logic */
+  const handleStart = (clientX: number) => {
+    setIsDragging(true);
+    setStartX(clientX);
+  };
+
+  const handleMove = (clientX: number) => {
+    if (!isDragging) return;
+    const diff = clientX - startX;
+    setDragOffset(diff);
+  };
+
+  const handleEnd = () => {
+    if (!isDragging) return;
+
+    if (dragOffset < -50) {
+      setActiveAdIndex((prev) => prev + 1);
+    } else if (dragOffset > 50) {
+      setActiveAdIndex((prev) => prev - 1);
+    }
+
+    setDragOffset(0);
+    setIsDragging(false);
+  };
 
   /* -------------------- Fetch Data -------------------- */
   useEffect(() => {
@@ -118,9 +175,6 @@ useEffect(() => {
     );
   }
 
-  const shouldAutoScroll = ads.length > 2;
-  const displayAds = shouldAutoScroll ? [...ads, ...ads] : ads;
-
   return (
     <div className="space-y-10 px-10 mx-auto">
 
@@ -146,103 +200,78 @@ useEffect(() => {
 
       {/* -------------------- Stats -------------------- */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard
-          label="Total Posts"
-          value={stats?.total || 0}
-          icon={CheckCircle}
-          color="bg-green-500"
-          trend="+12% Cycle Growth"
-        />
-        <StatCard
-          label="Scheduled Queue"
-          value={stats?.scheduled || 0}
-          icon={Clock}
-          color="bg-blue-600"
-        />
-        <StatCard
-          label="AI Post Usage"
-          value={`${user?.usage?.aiGenerationsThisMonth || 0}/${user?.planId?.limits?.maxAiGenerationsPerMonth}`}
-          icon={Zap}
-          color="bg-indigo-600"
-        />
-        <StatCard
-          label="AI Image Usage"
-          value={`${user?.usage?.aiImagesThisMonth || 0}/${user?.planId?.limits?.maxAiImagesPerMonth}`}
-          icon={Image}
-          color="bg-pink-500"
-        />
+        <StatCard label="Total Posts" value={stats?.total || 0} icon={CheckCircle} color="bg-green-500" trend="+12% Cycle Growth" />
+        <StatCard label="Scheduled Queue" value={stats?.scheduled || 0} icon={Clock} color="bg-blue-600" />
+        <StatCard label="AI Post Usage" value={`${user?.usage?.aiGenerationsThisMonth || 0}/${user?.planId?.limits?.maxAiGenerationsPerMonth}`} icon={Zap} color="bg-indigo-600" />
+        <StatCard label="AI Image Usage" value={`${user?.usage?.aiImagesThisMonth || 0}/${user?.planId?.limits?.maxAiImagesPerMonth}`} icon={Image} color="bg-pink-500" />
       </div>
 
-      {/* -------------------- ADS (NEW VIEW) -------------------- */}
+      {/* -------------------- ADS -------------------- */}
       {ads.length > 0 && (
-          <div className="relative w-full overflow-hidden group">
-             <span className="absolute top-4 left-2 z-10 rounded-full bg-white/20 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-black shadow-md">
-    Sponsored
-  </span>
-            <div
-              className="flex transition-transform duration-700 ease-in-out"
-              style={{
-                transform: `translateX(-${activeAdIndex * 100}%)`
-              }}
-            >
-              {ads.map((ad, i) => (
-                <a
-                  key={i}
-                  href={ad.linkUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="min-w-full px-4"
-                >
-                  <div className="h-[220px] flex flex-col md:flex-row bg-slate-900 border border-white/5 rounded-[3rem] overflow-hidden hover:border-blue-500/30 transition-all shadow-2xl">
+        <div
+          className="relative w-full overflow-hidden group"
+          onMouseDown={(e) => handleStart(e.clientX)}
+          onMouseMove={(e) => handleMove(e.clientX)}
+          onMouseUp={handleEnd}
+          onMouseLeave={handleEnd}
+          onTouchStart={(e) => handleStart(e.touches[0].clientX)}
+          onTouchMove={(e) => handleMove(e.touches[0].clientX)}
+          onTouchEnd={handleEnd}
+        >
+          <span className="absolute top-4 left-2 z-10 rounded-full bg-white/20 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-black shadow-md">
+            Sponsored
+          </span>
 
-                    {/* IMAGE */}
-                    <div className="md:w-[70%] flex items-center justify-center bg-black/10 p-4">
-                      <img
-                        src={ad.imageUrl}
-                        alt={ad.title}
-                        className="max-h-full max-w-full object-contain transition-transform duration-500 hover:scale-105"
-                      />
-                    </div>
+          <div
+            className={`flex ${isTransitioning ? 'transition-transform duration-700 ease-in-out' : ''}`}
+            style={{
+              transform: `translateX(calc(-${activeAdIndex * 100}% + ${dragOffset}px))`
+            }}
+            onTransitionEnd={handleTransitionEnd}
+          >
+            {extendedAds.map((ad, i) => (
+              <a key={i} href={ad.linkUrl} target="_blank" rel="noopener noreferrer" className="min-w-full px-4">
+                <div className="h-[220px] flex flex-col md:flex-row bg-slate-900 border border-white/5 rounded-[3rem] overflow-hidden hover:border-blue-500/30 transition-all shadow-2xl">
 
-                    {/* CONTENT */}
-                    <div className="md:w-[30%] p-6 flex flex-col justify-center">
-                      <h3 className="text-2xl font-black text-white uppercase tracking-tighter leading-none">
-                        {ad.title}
-                      </h3>
-
-                      <p className="text-sm text-slate-400 font-medium mt-4 line-clamp-3">
-                        {ad.description}
-                      </p>
-
-                      <span className="mt-8 inline-flex items-center gap-2 text-blue-400 font-black uppercase tracking-widest text-[9px]">
-                        Learn More <ExternalLink className="w-3 h-3" />
-                      </span>
-                    </div>
+                  <div className="md:w-[70%] flex items-center justify-center bg-black/10 p-4">
+                    <img src={ad.imageUrl} alt={ad.title} className="max-h-full max-w-full object-contain transition-transform duration-500 hover:scale-105" />
                   </div>
-                </a>
+
+                  <div className="md:w-[30%] p-6 flex flex-col justify-center">
+                    <h3 className="text-2xl font-black text-white uppercase tracking-tighter leading-none">
+                      {ad.title}
+                    </h3>
+
+                    <p className="text-sm text-slate-400 font-medium mt-4 line-clamp-3">
+                      {ad.description}
+                    </p>
+
+                    <span className="mt-8 inline-flex items-center gap-2 text-blue-400 font-black uppercase tracking-widest text-[9px]">
+                      Learn More <ExternalLink className="w-3 h-3" />
+                    </span>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+
+          {hasMultipleAds && (
+            <div className="flex justify-center gap-2 mt-4">
+              {ads.map((_, i) => (
+                <span
+                  key={i}
+                  onClick={() => setActiveAdIndex(i + 1)}
+                  className={`w-2 h-2 rounded-full cursor-pointer transition-all ${
+                    i + 1 === activeAdIndex ? 'bg-white' : 'bg-white/30'
+                  }`}
+                />
               ))}
             </div>
-            
+          )}
+        </div>
+      )}
 
-            {/* DOT INDICATORS */}
-            {hasMultipleAds && (
-              <div className="flex justify-center gap-2 mt-4">
-                {ads.map((_, i) => (
-                  <span
-                    key={i}
-                    className={`w-2 h-2 rounded-full transition-all ${
-                      i === activeAdIndex ? 'bg-white' : 'bg-white/30'
-                    }`}
-                  />
-                ))}
-              </div>
-            )}
-            
-          </div>
-        )}
-
-
-      {/* -------------------- Chart + Queue -------------------- */}
+     {/* -------------------- Chart + Queue -------------------- */}
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
 
         {/* Chart */}

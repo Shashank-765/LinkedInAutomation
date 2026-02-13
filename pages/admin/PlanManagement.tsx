@@ -177,7 +177,7 @@ const PlanManagement: React.FC = () => {
               </div>
 
               <div className="flex items-baseline gap-1 mb-10">
-                <span className="text-5xl font-black text-slate-900 dark:text-white tracking-tighter">{plan.price}₹</span>
+                <span className="text-5xl font-black text-slate-900 dark:text-white tracking-tighter">{plan.price} ₹</span>
                 <span className="text-slate-400 font-bold uppercase text-xs tracking-widest">/mo</span>
               </div>
               
@@ -291,7 +291,7 @@ const PlanManagement: React.FC = () => {
                        <div className="space-y-4 mb-10">
                           <div className="flex justify-between items-center py-4 border-b border-white/10">
                              <span className="text-sm font-medium text-blue-100">Monthly License</span>
-                             <span className="text-xl font-black">${selectedPlanToBuy.price}</span>
+                             <span className="text-xl font-black">{selectedPlanToBuy.price} ₹</span>
                           </div>
                           <div className="flex justify-between items-center py-4">
                              <span className="text-sm font-medium text-blue-100">Automation Setup</span>

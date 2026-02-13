@@ -12,7 +12,7 @@ import logo from '/assets/darklogo.png'
 // import '../assets'
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, logout } = useAuth();
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const currentPath = window.location.pathname || '/';
 // console.log('isDarkMode', isDarkMode)

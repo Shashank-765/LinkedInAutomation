@@ -113,7 +113,7 @@ const secondColumn = staticPages.slice(mid);
 
   return (
     <div className="bg-slate-950 text-slate-200 min-h-screen font-sans selection:bg-blue-500/30 selection:text-blue-200">
-      <nav className="fixed top-0 w-full z-[100] bg-slate-900 border-b border-white/5 bg-slate-950/80 backdrop-blur-xl">
+      <nav className="fixed top-0 w-full z-[100] bg-slate-800 border-b border-white/5 bg-slate-950/80 backdrop-blur-xl">
         <div className="max-w-[1400px] mx-auto  h-20 flex items-center justify-between">
          <div
           onClick={() => (window.location.pathname = '/')}
@@ -132,10 +132,10 @@ const secondColumn = staticPages.slice(mid);
               <a key={item} href="" className="text-[11px] font-black uppercase tracking-widest text-slate-400 hover:text-white transition-colors">{item}</a>
             ))}
           </div> */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-[80px] bg-slate-950 rounded-full p-5">
             {user ? (
                 <>
-                    <span className="text-sm font-medium text-slate-400">{user.email}</span>
+                    <span className="text-sm font-medium text-slate-400">{user.name}</span>
                     <button onClick={logout} className="text-sm font-medium text-blue-500 hover:underline">Logout</button>
                 </>
             ) : (

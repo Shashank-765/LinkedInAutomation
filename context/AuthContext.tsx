@@ -5,6 +5,7 @@ import { authApi } from '../services/api';
 
 interface AuthContextType extends AuthState {
   login: (email: string, passwordOrRole: string | UserRole) => Promise<void>;
+  forgot: (email: string) => Promise<void>;
   register: (userData: any) => Promise<void>;
   logout: () => void;
   updateUserUsage: (usageType: 'ai' | 'schedule' | 'image') => void;
@@ -94,6 +95,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     window.location.pathname = '/login';
   };
 
+    const forgot = async (email: string) => {
+      try {
+        await authApi.forgotPassword(email);
+      } catch (error) {
+        throw error;
+      }
+    };
+
   const updatePlan = async (planId: string) => {
     try {
       await authApi.purchasePlan(planId);
@@ -141,7 +150,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ ...state, login, register, logout, updateUserUsage, updatePlan, updateProfile, setUser, checkAuth }}>
+    <AuthContext.Provider value={{ ...state, login, forgot ,register, logout, updateUserUsage, updatePlan, updateProfile, setUser, checkAuth }}>
       {children}
     </AuthContext.Provider>
   );

@@ -118,6 +118,7 @@ export interface AuthState {
 export interface StaticPageConfig {
   title: string;
   slug: string;
+  category: "Platform" | "Company" | "Resources" | "Legal";
   description: string;
   features: {
     title: string;

@@ -39,13 +39,13 @@ exports.createUser = async (req, res) => {
 
     await newUser.save();
 
-    // // ✅ Send onboarding email
-    // await sendOnboardingEmail({
-    //   to: email,
-    //   name,
-    //   email,
-    //   password: generatedPassword
-    // });
+    // ✅ Send onboarding email
+    await sendOnboardingEmail({
+      to: email,
+      name,
+      email,
+      password: generatedPassword
+    });
 
     const userResponse = await User.findById(newUser._id)
       .populate('planId')

@@ -84,7 +84,13 @@ const Login: React.FC = () => {
             <div>
               <div className="flex justify-between items-center mb-2">
                 <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest">Password</label>
-                <button type="button" className="text-[10px] text-blue-400 font-bold hover:underline">Forgot?</button>
+                 <button 
+                  type="button" 
+                  onClick={() => window.location.pathname = '/forgot-password'}
+                  className="text-[10px] text-blue-400 font-bold hover:underline"
+                >
+                  Forgot?
+                </button>
               </div>
               <input 
                 type="password" 

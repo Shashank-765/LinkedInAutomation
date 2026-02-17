@@ -11,6 +11,11 @@ const UserSchema = new mongoose.Schema({
   companyName: { type: String, default: '' },
   industry: { type: String, default: '' },
   postTypePreference: { type: String, default: 'Educational' },
+
+  // Password Reset Fields
+  resetPasswordToken: { type: String },
+  resetPasswordExpires: { type: Date },
+
   
   // LinkedIn OAuth Integration
   linkedInConnected: { type: Boolean, default: false },
@@ -63,5 +68,6 @@ UserSchema.statics.createDefaultAdmin = async function() {
    return data;
   }
 };
+
 
 module.exports = mongoose.model('User', UserSchema);

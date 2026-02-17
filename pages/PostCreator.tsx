@@ -47,9 +47,9 @@ const PostCreator: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'CANVAS' | 'PREVIEW'>('CANVAS'); 
   const [suggestedTab, setSuggestedTab] = useState<'AI' | 'NEWS'>('NEWS');
   const [imageCount, setImageCount] = useState(1);
-  console.log('user?.industry', user?.industry)
+  // console.log('user?.industry', user?.industry)
   // ===== EFFECTS (UNCHANGED) =====
-  console.log('currentVideo', currentVideo)
+  // console.log('currentVideo', currentVideo)
   useEffect(() => {
     fetchTrendingNews(searchQuery);
   }, []);
@@ -183,7 +183,7 @@ const PostCreator: React.FC = () => {
       formData.append("images[]", img)
     );
 
-    console.log('selectedVideoFile', selectedVideoFile)
+    // console.log('selectedVideoFile', selectedVideoFile)
     if (selectedVideoFile) {
       formData.append("video", selectedVideoFile); // REAL FILE
     }

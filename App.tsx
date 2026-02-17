@@ -47,7 +47,8 @@ const Router: React.FC = () => {
   }, []);
 
   const renderRoute = () => {
-    if (route.startsWith('/auth/linkedin/callback')) return <LinkedInCallback />;
+    const isLinkedInCallback = window.location.href.includes('?code');
+    if (isLinkedInCallback) return <LinkedInCallback />;
 
     if (route.startsWith('/reset-password/')) return <ResetPassword />;
     // if (!isAuthenticated) return <LandingPage />;
@@ -104,7 +105,7 @@ const Router: React.FC = () => {
     '/dashboard', '/create', '/user/review', '/schedule', '/admin', '/analytics', '/settings'
   ].some(p => route.startsWith(p));
 
-  console.log('isPublicRoute ', isPublicRoute , 'isNotPublicRoute ', isNotPublicRoute, 'isAuthenticated ', isAuthenticated, 'route ', route);
+  // console.log('isPublicRoute ', isPublicRoute , 'isNotPublicRoute ', isNotPublicRoute, 'isAuthenticated ', isAuthenticated, 'route ', route);
 
   if (isNotPublicRoute && isAuthenticated) {
     return <Layout>{renderRoute()}</Layout>;

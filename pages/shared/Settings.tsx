@@ -18,7 +18,7 @@ const Settings: React.FC = () => {
     industry: user?.industry || '',
     postTypePreference: user?.postTypePreference || 'Educational'
   });
-  console.log('user', user)
+  // console.log('user', user)
   useEffect(() => {
     setFormData({
       name: user?.name || '',
@@ -52,6 +52,8 @@ const Settings: React.FC = () => {
       const response = await authApi.getLinkedInLink();
       //console.log("Redirecting to LinkedIn Auth URL:", response);
       if (response.data.url) {
+        // console.log('url', response.data.url)
+        // alert(response.data.url);
         // 2. Redirect the user to LinkedIn
         window.location.href = response.data.url;
       } else {

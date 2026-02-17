@@ -124,13 +124,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const updateUserUsage = (usageType: 'ai' | 'schedule' | 'image') => {
     const currentUser = state.user || JSON.parse(localStorage.getItem('user') || 'null');
-    console.log("Updating user usage for type:", usageType, "Current user:", currentUser);
+    // console.log("Updating user usage for type:", usageType, "Current user:", currentUser);
     if (!currentUser) return;
     const updatedUser = { ...currentUser };
     if (usageType === 'ai') updatedUser.usage.aiGenerationsThisMonth += 1;
     if (usageType === 'schedule') updatedUser.usage.scheduledToday += 1;
     if (usageType === 'image') updatedUser.usage.aiImagesThisMonth ? updatedUser.usage.aiImagesThisMonth += 1 : updatedUser.usage.aiImagesThisMonth = 1;
-    console.log('first', updatedUser.usage)
+    // console.log('first', updatedUser.usage)
     authApi.updateProfile(currentUser._id, updatedUser).catch(err => {
       console.error("Failed to update profile", err);
     });

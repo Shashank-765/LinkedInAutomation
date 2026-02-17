@@ -40,6 +40,7 @@ api.interceptors.response.use(
 
     // We only simulate if the real request failed
     if (is401 || is404 || isNetworkError) {
+      // console.log('config', config)
       const url = config?.url;
       const method = config?.method;
       
@@ -50,7 +51,7 @@ api.interceptors.response.use(
         const currentUser = getFreshUser();
         if (currentUser) return simulateResponse(currentUser);
       }
-
+// console.log('url', url)
       // 2. LinkedIn Connection Simulation (Bypasses Revoked Token/401)
       if (url === '/auth/linkedin/connect' && method === 'post') {
         const currentUser = getFreshUser();

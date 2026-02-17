@@ -23,7 +23,7 @@ const getLinkedInConfig = () => ({
   CLIENT_ID: process.env.LINKEDIN_CLIENT_ID,
   CLIENT_SECRET: process.env.LINKEDIN_CLIENT_SECRET,
   REDIRECT_URI: process.env.LINKEDIN_REDIRECT_URI,
-  SCOPES: "openid r_verify profile r_profile_basicinfo email w_member_social",
+  SCOPES: "openid r_verify profile email w_member_social",
 });
 
 /* ================= OAUTH ================= */
@@ -37,6 +37,7 @@ function getAuthorizationUrl() {
 
 async function exchangeCodeForToken(code) {
   const c = getLinkedInConfig();
+  try {
   const res = await axios.post(
     "https://www.linkedin.com/oauth/v2/accessToken",
     null,
@@ -51,7 +52,12 @@ async function exchangeCodeForToken(code) {
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
     }
   );
+  console.log('Token response', res.data);
   return res.data.access_token;
+} catch (err) {
+  console.error('Error exchanging code for token:', err.response?.data || err.message);
+  throw new Error("Failed to exchange code for token");
+}
 }
 
 async function getLinkedInProfile(token) {

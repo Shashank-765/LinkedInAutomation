@@ -12,6 +12,7 @@ const {
   exchangeCodeForToken 
 } = require('../services/linkedin.service.js');
 
+
 const JWT_SECRET = process.env.JWT_SECRET || 'postpilot_secret_key_2025';
 
 exports.register = async (req, res) => {
@@ -49,7 +50,7 @@ exports.login = async (req, res) => {
     console.log('first', email, password)
     let user = await User.findOne({ email }).populate('planId');
     if (!user) return res.status(400).json({ message: 'Invalid credentials' });
-    console.log('user', user)
+    // console.log('user', user)
     console.log(Array.isArray(user.linkedInProfile))
      if (!Array.isArray(user.linkedInProfile)) {
        user.linkedInProfile = [user.linkedInProfile]
@@ -135,7 +136,7 @@ exports.getMe = async (req, res) => {
       .populate('planId')
       .select('-password')
       .lean();   // 🔥 important
-    console.log('user', user)
+    // console.log('user', user)
     const activeProfile = user.linkedInProfile?.find(
       (d) => d.urn === user.activeUrn
     );
@@ -165,15 +166,15 @@ exports.getLinkedInLink = async (req, res) => {
 exports.connectLinkedIn = async (req, res) => {
   try {
     const { code } = req.body;
-
+    
     const accessToken = code 
       ? await exchangeCodeForToken(code) 
       : "AQV_MOCKED_TOKEN_" + Math.random().toString(36).substring(7);
-
+    console.log('accessToken', accessToken)
     const profile = await getLinkedInProfile(accessToken);
+    console.log("profile", profile)
 
     const user = await User.findById(req.user.id);
-console.log("user", user)
     // 🔥 Normalize old data
     if (!Array.isArray(user.linkedInProfile)) {
       if (user.linkedInProfile) {

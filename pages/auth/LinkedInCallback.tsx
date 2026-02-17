@@ -6,8 +6,9 @@ import { Loader2, Linkedin, CheckCircle2, AlertCircle, Zap, ShieldAlert } from '
 
 const LinkedInCallback: React.FC = () => {
   const { setUser } = useAuth();
-  const [status, setStatus] = useState<'LOADING' | 'SUCCESS' | 'ERROR'>('LOADING');
+  const [status, setStatus] = useState<'PENDING' | 'SUCCESS' | 'ERROR'>('LOADING');
   const [errorMsg, setErrorMsg] = useState('');
+  const hasCalled = React.useRef(false);
 
 
   const reconnect = async () => {
@@ -22,12 +23,16 @@ const LinkedInCallback: React.FC = () => {
   }
 
   const handleCallback = async (forceSimulate: boolean = false) => {
-    setStatus('LOADING');
+    // window.history.replaceState({}, '', '/settings');
+    console.log("Handling LinkedIn callback with URL:", window.location.href);
+    console.log('status', status)
+    setStatus('PENDING');
     
     // Robust param parsing
     const urlParams = new URLSearchParams(window.location.search || window.location.href.split('?')[1]);
     const code = urlParams.get('code') || (forceSimulate ? 'sim_code_' + Date.now() : null);
     const error = urlParams.get('error');
+    //  window.location.pathname = '/settings';
     
     if (error && !forceSimulate) {
       setStatus('ERROR');
@@ -36,12 +41,13 @@ const LinkedInCallback: React.FC = () => {
     }
     
     try {
+      
       const response = await authApi.connectLinkedIn(code || 'sim_handshake');
       if (response.data && response.data.user) {
         setUser(response.data.user);
         setStatus('SUCCESS');
+        // window.location.pathname = '/settings';
         // setTimeout(() => {
-        //   window.location.pathname = '/settings';
         // }, 1500);
       }
     } catch (err: any) {
@@ -52,15 +58,22 @@ const LinkedInCallback: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    handleCallback();
-  }, []);
+
+useEffect(() => {
+    setStatus('PENDING');
+
+    if (hasCalled.current) return;
+    hasCalled.current = true;
+
+  handleCallback();
+}, [status === 'LOADING']);
+
 
   return (
     <div className="min-h-screen flex items-center justify-center p-6 bg-slate-900">
       <div className="max-w-xl w-full bg-slate-800 rounded-[3rem] p-12 text-center shadow-2xl border border-slate-700 space-y-8 animate-in zoom-in duration-300">
         
-        {status === 'LOADING' && (
+        {status === 'PENDING' && (
           <>
             <div className="relative w-24 h-24 mx-auto">
                <Loader2 className="w-full h-full text-blue-500 animate-spin" />

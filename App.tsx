@@ -39,16 +39,17 @@ const Router: React.FC = () => {
   const { isAuthenticated } = useAuth();
   const [route, setRoute] = React.useState(window.location.pathname || '/');
 
-  React.useEffect(() => {
-    const handlePathChange = () => setRoute(window.location.pathname || '/');
-    window.addEventListener('popstate', handlePathChange);
-    if (!window.location.pathname) window.location.pathname = '/';
-    return () => window.removeEventListener('popstate', handlePathChange);
-  }, []);
-
+  // React.useEffect(() => {
+  //   const handlePathChange = () => setRoute(window.location.pathname || '/');
+  //   window.addEventListener('popstate', handlePathChange);
+  //   if (!window.location.pathname) window.location.pathname = '/';
+  //   return () => window.removeEventListener('popstate', handlePathChange);
+  // }, []);
+  // React.useMemo(() => first, [second])
   const renderRoute = () => {
-    const isLinkedInCallback = window.location.href.includes('?code');
-    if (isLinkedInCallback) return <LinkedInCallback />;
+    console.log('route', route)
+  if (route === '/linkedin/callback') return <LinkedInCallback />;
+
 
     if (route.startsWith('/reset-password/')) return <ResetPassword />;
     // if (!isAuthenticated) return <LandingPage />;
@@ -93,23 +94,23 @@ const Router: React.FC = () => {
       default: return <NotFoundPage />;
     }
 
-
+    
 
    
   };
 
-  const isPublicRoute = [
-   '/','/home', '/login', '/pricing', '/platform', '/company', '/resources', '/legal'
-  ].some(p => route.startsWith(p));
+  // const isPublicRoute = [
+  //  '/','/home', '/login', '/pricing', '/platform', '/company', '/resources', '/legal'
+  // ].some(p => route.startsWith(p));
   const isNotPublicRoute = [
-    '/dashboard', '/create', '/user/review', '/schedule', '/admin', '/analytics', '/settings'
+    '/dashboard', '/create', '/user/review', '/schedule', '/admin', '/analytics', '/settings','/linkedin/callback'
   ].some(p => route.startsWith(p));
 
   // console.log('isPublicRoute ', isPublicRoute , 'isNotPublicRoute ', isNotPublicRoute, 'isAuthenticated ', isAuthenticated, 'route ', route);
 
   if (isNotPublicRoute && isAuthenticated) {
     return <Layout>{renderRoute()}</Layout>;
-  }else{
+  } else if (!isNotPublicRoute && !isAuthenticated) {
     return renderRoute();
   }
 

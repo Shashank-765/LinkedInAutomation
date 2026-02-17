@@ -110,7 +110,7 @@ const Router: React.FC = () => {
 
   if (isNotPublicRoute && isAuthenticated) {
     return <Layout>{renderRoute()}</Layout>;
-  } else if (!isNotPublicRoute && !isAuthenticated) {
+  } else if (!isNotPublicRoute) {
     return renderRoute();
   }
 

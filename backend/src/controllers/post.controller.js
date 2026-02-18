@@ -163,6 +163,7 @@ const accessToken = linkedInAccount.accessToken;
     }
     
   } catch (err) {
+    console.log('Deployment Error:', err);
     res.status(500).json({ message: "Deployment Failed: " + err.message });
   }
 };

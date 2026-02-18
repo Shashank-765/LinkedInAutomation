@@ -13,7 +13,7 @@ const V2_BASE = "https://api.linkedin.com/v2";
 
 const getHeaders = (token) => ({
   Authorization: `Bearer ${token}`,
-  "LinkedIn-Version": "202502",
+  "LinkedIn-Version": "202602",
   "X-Restli-Protocol-Version": "2.0.0",
   "Content-Type": "application/json",
 });

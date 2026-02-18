@@ -234,7 +234,7 @@ exports.likePost = async (req, res) => {
     const user = await User.findById(req.user.id);
 
     if (!post || !post.linkedInPostId) return res.status(404).json({ message: "Post not live on LinkedIn" });
-    if (!user.linkedInProfile?.accessToken) return res.status(401).json({ message: "LinkedIn node offline" });
+    // if (!user.linkedInProfile?.accessToken) return res.status(401).json({ message: "LinkedIn node offline" });
 const linkedInAccount = user.linkedInProfile.find(
   (profile) => profile.urn === post.linkedinUrn
 );
@@ -263,7 +263,7 @@ exports.commentPost = async (req, res) => {
     const user = await User.findById(req.user.id);
 
     if (!post || !post.linkedInPostId) return res.status(404).json({ message: "Post not live" });
-    if (!user.linkedInProfile?.accessToken) return res.status(401).json({ message: "LinkedIn node offline" });
+    // if (!user.linkedInProfile?.accessToken) return res.status(401).json({ message: "LinkedIn node offline" });
 
     const linkedInAccount = user.linkedInProfile.find(
   (profile) => profile.urn === post.linkedinUrn

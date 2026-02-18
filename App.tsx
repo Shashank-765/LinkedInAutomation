@@ -1,6 +1,8 @@
 
 import React from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ToastContainer } from 'react-toastify';
+
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import PostCreator from './pages/PostCreator';
@@ -123,6 +125,7 @@ const Router: React.FC = () => {
 const App: React.FC = () => {
   return (
     <AuthProvider>
+      <ToastContainer />
       <Router />
     </AuthProvider>
   );

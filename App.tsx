@@ -10,6 +10,7 @@ import UserManagement from './pages/admin/UserManagement';
 import PostApprovals from './pages/admin/PostApprovals'; 
 import PlanManagement from './pages/admin/PlanManagement';
 import ScheduleManager from './pages/user/ScheduleManager';
+import AutoPilot from './pages/user/AutoPilotManager';
 import Analytics from './pages/shared/Analytics';
 import Settings from './pages/shared/Settings';
 import LinkedInCallback from './pages/auth/LinkedInCallback';
@@ -89,6 +90,7 @@ const Router: React.FC = () => {
       case '/schedule': return <ScheduleManager />;
       case '/admin/users': return <UserManagement />;
       case '/admin/plans': return <PlanManagement />;
+      case '/autopilot': return <AutoPilot />;
       case '/analytics': return <Analytics />;
       case '/settings': return <Settings />;
       default: return <NotFoundPage />;
@@ -103,7 +105,7 @@ const Router: React.FC = () => {
   //  '/','/home', '/login', '/pricing', '/platform', '/company', '/resources', '/legal'
   // ].some(p => route.startsWith(p));
   const isNotPublicRoute = [
-    '/dashboard', '/create', '/user/review', '/schedule', '/admin', '/analytics', '/settings','/linkedin/callback'
+    '/dashboard', '/create', '/user/review', '/schedule', '/admin', '/analytics', '/settings','/linkedin/callback','/autopilot'
   ].some(p => route.startsWith(p));
 
   // console.log('isPublicRoute ', isPublicRoute , 'isNotPublicRoute ', isNotPublicRoute, 'isAuthenticated ', isAuthenticated, 'route ', route);

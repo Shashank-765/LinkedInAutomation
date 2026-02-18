@@ -250,9 +250,9 @@ const PostCreator: React.FC = () => {
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
 
         {/* ===== COLUMN 1: INSPIRATION (UNCHANGED) ===== */}
-          <div className="xl:col-span-3 space-y-6">
+          <div className="xl:col-span-4 space-y-6">
             {/* ✅ TABS MOVED HERE */}
-          <div className="flex justify-center">
+           <div className="flex justify-center">
             <div className="flex bg-slate-100 dark:bg-slate-900/50 p-1.5 rounded-2xl border">
             <button
                 onClick={() => setSuggestedTab('NEWS')}
@@ -404,14 +404,21 @@ const PostCreator: React.FC = () => {
                             </select>
                           </div>
             
-                          {/* <div className="space-y-2">
-                            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">AI Image Multiplier</label>
-                            <div className="grid grid-cols-4 gap-2">
-                              {[1, 2, 3, 4].map(num => (
-                                <button key={num} onClick={() => setImageCount(num)} className={`py-3 rounded-xl text-xs font-black transition-all ${imageCount === num ? 'bg-blue-600 text-white shadow-lg' : 'bg-slate-100 dark:bg-slate-900 text-slate-400'}`}>{num}x</button>
-                              ))}
-                            </div>
-                          </div> */}
+                          <div className="space-y-3">
+                           <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6 flex items-center gap-2"><Target className="w-4 h-4" /> Suggestions</h2>
+                        {isLoadingTopics ? (
+                           <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="h-14 bg-slate-50 dark:bg-slate-900/50 rounded-2xl animate-pulse" />)}</div>
+                        ) : (
+                          <div className="space-y-3">
+                            {suggestedTopics.map((t, idx) => (
+                              <button key={idx} onClick={() => { setTopic(t); handleGenerate(); }} className="w-full text-left p-4 rounded-2xl text-[12px] font-bold bg-slate-50 dark:bg-slate-900/50 hover:bg-blue-600 hover:text-white transition-all group flex items-center justify-between">
+                                <span className=" pr-2">{t}</span>
+                                <Plus className="w-3 h-3 opacity-0 group-hover:opacity-100" />
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                          </div>
             
                           <div className="pt-4 space-y-3">
                              <input 
@@ -433,27 +440,13 @@ const PostCreator: React.FC = () => {
                         </div>
                       </div>
             
-                      <div className="bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] border dark:border-slate-700 shadow-sm">
-                        <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6 flex items-center gap-2"><Target className="w-4 h-4" /> Suggestions</h2>
-                        {isLoadingTopics ? (
-                           <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="h-14 bg-slate-50 dark:bg-slate-900/50 rounded-2xl animate-pulse" />)}</div>
-                        ) : (
-                          <div className="space-y-3">
-                            {suggestedTopics.map((t, idx) => (
-                              <button key={idx} onClick={() => { setTopic(t); handleGenerate(); }} className="w-full text-left p-4 rounded-2xl text-[12px] font-bold bg-slate-50 dark:bg-slate-900/50 hover:bg-blue-600 hover:text-white transition-all group flex items-center justify-between">
-                                <span className=" pr-2">{t}</span>
-                                <Plus className="w-3 h-3 opacity-0 group-hover:opacity-100" />
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                      </div>
+                      
             </>
           )}
         </div>
 
         {/* ===== COLUMN 2+3: TABBED AREA (FIXED) ===== */}
-        <div className="xl:col-span-9 space-y-6">
+        <div className="xl:col-span-8 space-y-6">
 
           {/* ✅ TABS MOVED HERE */}
           <div className="flex justify-center">

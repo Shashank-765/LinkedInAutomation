@@ -63,9 +63,10 @@ const AutoPilotManager: React.FC = () => {
   // CREATE CONFIGS
   // =====================================================
 
+  console.log('user', user)
   const createIndustry = async () => {
     const res = await autoPostIndustryApi.create({
-      urn: user.linkedInProfile[0].urn,
+      urn: user.linkedInProfile.urn,
       enabled: true
     });
     setIndustryConfig(res.data);
@@ -74,7 +75,7 @@ const AutoPilotManager: React.FC = () => {
 
   const createCalendar = async () => {
     const res = await autoPostCalendarApi.create({
-      urn: user.linkedInProfile[0].urn,
+      urn: user.linkedInProfile.urn,
       enabled: true
     });
     setCalendarConfig(res.data);

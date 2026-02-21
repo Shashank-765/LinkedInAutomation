@@ -52,10 +52,15 @@ export interface CalendarEvent {
   topic: string;
   isGlobal?: boolean;
 }
+export interface IndustryEvent {
+  time: string;
+  keywords: string;
+  lastAutoPostDate: string;
+}
 
 export interface AutoPilotConfig {
   enabled: boolean;
-  industryKeywords: string;
+  industryKeywords: IndustryEvent[];
   calendarEvents: CalendarEvent[];
   lastAutoPostDate?: string;
 }

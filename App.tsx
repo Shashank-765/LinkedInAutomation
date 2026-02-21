@@ -37,6 +37,7 @@ import GdprNode from './pages/legal/GdprNode';
 import NotFoundPage from './pages/404';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import AdManagement from './pages/admin/AdManagement';
 
 const Router: React.FC = () => {
   const { isAuthenticated } = useAuth();
@@ -92,6 +93,7 @@ const Router: React.FC = () => {
       case '/schedule': return <ScheduleManager />;
       case '/admin/users': return <UserManagement />;
       case '/admin/plans': return <PlanManagement />;
+      case '/admin/ads': return <AdManagement />;
       case '/autopilot': return <AutoPilot />;
       case '/analytics': return <Analytics />;
       case '/settings': return <Settings />;

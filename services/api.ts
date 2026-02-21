@@ -140,6 +140,34 @@ export const postApi = {
   syncMetrics: (id: string) => api.get(`/posts/${id}/metrics`),
 };
 
+
+export const autoPostIndustryApi = {
+  create: (data: any) => api.post('/autopost-industry', data),
+  getAll: () => api.get('/autopost-industry'),
+  update: (id: string, data: any) => api.put(`/autopost-industry/${id}`, data),
+  delete: (id: string) => api.delete(`/autopost-industry/${id}`),
+
+  addSlot: (id: string, data: any) =>
+    api.post(`/autopost-industry/${id}/slot`, data),
+
+  deleteSlot: (configId: string, slotId: string) =>
+    api.delete(`/autopost-industry/${configId}/slot/${slotId}`)
+};
+
+export const autoPostCalendarApi = {
+  create: (data: any) => api.post('/autopost-calendar', data),
+  getAll: () => api.get('/autopost-calendar'),
+  update: (id: string, data: any) => api.put(`/autopost-calendar/${id}`, data),
+  delete: (id: string) => api.delete(`/autopost-calendar/${id}`),
+
+  addEvent: (id: string, data: any) =>
+    api.post(`/autopost-calendar/${id}/event`, data),
+
+  deleteEvent: (configId: string, eventId: string) =>
+    api.delete(`/autopost-calendar/${configId}/event/${eventId}`)
+};
+
+
 export const adApi = {
   getAds: () => api.get('/ads'),
   getActiveAds: (location?: string) => api.get('/ads/active', { params: { location } }),

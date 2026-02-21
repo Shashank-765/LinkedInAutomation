@@ -55,6 +55,208 @@ exports.getTrendingTopics = async (req, res) => {
   }
 };
 
+
+
+exports.toggleAutoPilot = async (req, res) => {
+  try {
+    const { urn, enabled } = req.body;
+
+    const user = await User.findOneAndUpdate(
+      {
+        _id: req.user.id,
+        "autoPilotAccounts.urn": urn
+      },
+      {
+        $set: {
+          "autoPilotAccounts.$.enabled": enabled
+        }
+      },
+      { new: true }
+    );
+
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
+exports.createAutoPilotAccount = async (req, res) => {
+  try {
+    const { urn } = req.body;
+
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      {
+        $push: {
+          autoPilotAccounts: {
+            urn,
+            enabled: false,
+            industrySchedules: [],
+            calendarEvents: []
+          }
+        }
+      },
+      { new: true }
+    );
+
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+//industry schedules are the times when autopilot will check for trending topics and post on linkedin based on keywords defined by user.
+
+exports.addIndustrySchedule = async (req, res) => {
+  try {
+    const { urn, time, keywords } = req.body;
+
+    const user = await User.findOneAndUpdate(
+      {
+        _id: req.user.id,
+        "autoPilotAccounts.urn": urn
+      },
+      {
+        $push: {
+          "autoPilotAccounts.$.industrySchedules": {
+            time,
+            keywords
+          }
+        }
+      },
+      { new: true }
+    );
+
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
+exports.updateIndustrySchedule = async (req, res) => {
+  try {
+    const { urn, scheduleId, time, keywords } = req.body;
+
+    const user = await User.findOneAndUpdate(
+      {
+        _id: req.user.id,
+        "autoPilotAccounts.urn": urn,
+        "autoPilotAccounts.industrySchedules._id": scheduleId
+      },
+      {
+        $set: {
+          "autoPilotAccounts.$[account].industrySchedules.$[slot].time": time,
+          "autoPilotAccounts.$[account].industrySchedules.$[slot].keywords": keywords
+        }
+      },
+      {
+        arrayFilters: [
+          { "account.urn": urn },
+          { "slot._id": scheduleId }
+        ],
+        new: true
+      }
+    );
+
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
+exports.deleteIndustrySchedule = async (req, res) => {
+  try {
+    const { urn, scheduleId } = req.body;
+
+    const user = await User.findOneAndUpdate(
+      {
+        _id: req.user.id,
+        "autoPilotAccounts.urn": urn
+      },
+      {
+        $pull: {
+          "autoPilotAccounts.$.industrySchedules": {
+            _id: scheduleId
+          }
+        }
+      },
+      { new: true }
+    );
+
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+//calendar events are the important dates defined by user on which autopilot will post on linkedin based on topic defined by user.
+
+exports.addCalendarEvent = async (req, res) => {
+  try {
+    const { urn, date, topic } = req.body;
+
+    const user = await User.findOneAndUpdate(
+      {
+        _id: req.user.id,
+        "autoPilotAccounts.urn": urn
+      },
+      {
+        $push: {
+          "autoPilotAccounts.$.calendarEvents": {
+            date,
+            topic
+          }
+        }
+      },
+      { new: true }
+    );
+
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
+exports.deleteCalendarEvent = async (req, res) => {
+  try {
+    const { urn, eventId } = req.body;
+
+    const user = await User.findOneAndUpdate(
+      {
+        _id: req.user.id,
+        "autoPilotAccounts.urn": urn
+      },
+      {
+        $pull: {
+          "autoPilotAccounts.$.calendarEvents": {
+            _id: eventId
+          }
+        }
+      },
+      { new: true }
+    );
+
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
+
+exports.getAutoPilotConfig = async (req, res) => {
+  const user = await User.findById(req.user.id)
+    .select("autoPilotAccounts");
+
+  res.json(user.autoPilotAccounts);
+};
+
+
+
 exports.updateAutoPilotConfig = async (req, res) => {
   try {
     console.log('req.body', req.body)
@@ -81,7 +283,7 @@ exports.updateAutoPilotConfig = async (req, res) => {
 exports.savePost = async (req, res) => {
   try {
     const { topic, content, images, imageSource, status, scheduledAt, isAutoPilot, urn } = req.body;
-console.log('req.body', req.body)
+    console.log('req.body', req.body)
     let videoUrl = null;
     console.log("====================>",req.file)
     if(!urn){
@@ -125,47 +327,47 @@ exports.deployPost = async (req, res) => {
     }
 
     //find accesstoken from as array as per urn 
-// Find matching LinkedIn profile by URN
-const linkedInAccount = user.linkedInProfile.find(
-  (profile) => profile.urn === post.linkedinUrn
-);
+    // Find matching LinkedIn profile by URN
+    const linkedInAccount = user.linkedInProfile.find(
+      (profile) => profile.urn === post.linkedinUrn
+    );
 
-if (!linkedInAccount) {
-  throw new Error("LinkedIn account not connected for this URN");
-}
-
-const accessToken = linkedInAccount.accessToken;
-
-    if(post.images && post.images.length > 0){
-
-      // Deploy carousel post
-    const liResponse = await postLinkedInCarousel(post.content, post.images, accessToken, post.linkedinUrn);
-    post.status = 'POSTED';
-    post.postedAt = new Date();
-    console.log('liResponse', liResponse)
-    post.linkedInPostId = liResponse?.headers['x-linkedin-id'] || liResponse?.headers['x-restli-id'];
-    await post.save();
-
-    res.json({ success: true, post });
-      } else if(post.video){
-      // Deploy video post
-      const liResponse = await postLinkedInVideo(post.content, post.video, accessToken, post.linkedinUrn);
-      post.status = 'POSTED';
-      post.postedAt = new Date();
-    console.log('liResponse', liResponse)
-
-      post.linkedInPostId = liResponse?.headers['x-linkedin-id'] || liResponse?.headers['x-restli-id'];
-      await post.save();
-
-      res.json({ success: true, post });
-    } else {
-      return res.status(400).json({ message: "No media to post" });
+    if (!linkedInAccount) {
+      throw new Error("LinkedIn account not connected for this URN");
     }
-    
-  } catch (err) {
-    console.log('Deployment Error:', err);
-    res.status(500).json({ message: "Deployment Failed: " + err.message });
-  }
+
+    const accessToken = linkedInAccount.accessToken;
+
+        if(post.images && post.images.length > 0){
+
+          // Deploy carousel post
+        const liResponse = await postLinkedInCarousel(post.content, post.images, accessToken, post.linkedinUrn);
+        post.status = 'POSTED';
+        post.postedAt = new Date();
+        console.log('liResponse', liResponse)
+        post.linkedInPostId = liResponse?.headers['x-linkedin-id'] || liResponse?.headers['x-restli-id'];
+        await post.save();
+
+        res.json({ success: true, post });
+          } else if(post.video){
+          // Deploy video post
+          const liResponse = await postLinkedInVideo(post.content, post.video, accessToken, post.linkedinUrn);
+          post.status = 'POSTED';
+          post.postedAt = new Date();
+        console.log('liResponse', liResponse)
+
+          post.linkedInPostId = liResponse?.headers['x-linkedin-id'] || liResponse?.headers['x-restli-id'];
+          await post.save();
+
+          res.json({ success: true, post });
+        } else {
+          return res.status(400).json({ message: "No media to post" });
+        }
+        
+      } catch (err) {
+        console.log('Deployment Error:', err);
+        res.status(500).json({ message: "Deployment Failed: " + err.message });
+      }
 };
 
 exports.getAnalytics = async (req, res) => {
@@ -235,16 +437,16 @@ exports.likePost = async (req, res) => {
 
     if (!post || !post.linkedInPostId) return res.status(404).json({ message: "Post not live on LinkedIn" });
     // if (!user.linkedInProfile?.accessToken) return res.status(401).json({ message: "LinkedIn node offline" });
-const linkedInAccount = user.linkedInProfile.find(
-  (profile) => profile.urn === post.linkedinUrn
-);
+    const linkedInAccount = user.linkedInProfile.find(
+      (profile) => profile.urn === post.linkedinUrn
+    );
 
-if (!linkedInAccount) {
-  throw new Error("LinkedIn account not connected for this URN");
-}
+    if (!linkedInAccount) {
+      throw new Error("LinkedIn account not connected for this URN");
+    }
 
-const accessToken = linkedInAccount.accessToken;
-    await likeLinkedInPost(post.linkedInPostId, accessToken, post.linkedinUrn);
+    const accessToken = linkedInAccount.accessToken;
+        await likeLinkedInPost(post.linkedInPostId, accessToken, post.linkedinUrn);
     
     // Optimistic UI update for metrics
     post.metrics.likes = (post.metrics.likes || 0) + 1;
@@ -267,61 +469,61 @@ exports.commentPost = async (req, res) => {
 
     const linkedInAccount = user.linkedInProfile.find(
   (profile) => profile.urn === post.linkedinUrn
-);
+  );
 
-if (!linkedInAccount) {
-  throw new Error("LinkedIn account not connected for this URN");
-}
-
-const accessToken = linkedInAccount.accessToken;
-
-    await commentOnLinkedInPost(post.linkedInPostId, message, accessToken, post.linkedinUrn);
-    
-    post.metrics.comments = (post.metrics.comments || 0) + 1;
-    await post.save();
-
-    res.json({ success: true, message: "Comment published" });
-  } catch (err) {
-    console.log('err', err)
-    res.status(500).json({ message: err.response?.data?.message || err.message });
+  if (!linkedInAccount) {
+    throw new Error("LinkedIn account not connected for this URN");
   }
-};
 
-exports.syncMetrics = async (req, res) => {
-  try {
-    const post = await Post.findById(req.params.id);
-    const user = await User.findById(req.user.id);
-    
-    if (!post || !post.linkedInPostId) return res.status(404).json({ message: "Post not live" });
-    
-    // Ensure we use the user's token for the metrics sync
-   // console.log('Syncing metrics for post:', post.linkedInPostId);
-    //console.log('Using token for user:', user.linkedInProfile.accessToken);
-    const linkedInAccount = user.linkedInProfile.find(
-  (profile) => profile.urn === post.linkedinUrn
-);
+  const accessToken = linkedInAccount.accessToken;
 
-if (!linkedInAccount) {
-  throw new Error("LinkedIn account not connected for this URN");
-}
+      await commentOnLinkedInPost(post.linkedInPostId, message, accessToken, post.linkedinUrn);
+      
+      post.metrics.comments = (post.metrics.comments || 0) + 1;
+      await post.save();
 
-const accessToken = linkedInAccount.accessToken;
-    const fullDetails = await getPostFullDetails(post.linkedInPostId, accessToken);
-    
-    post.metrics = {
-      likes: fullDetails.stats.likes,
-      comments: fullDetails.stats.comments,
-      shares: post.metrics.shares || 0,
-      impressions: post.metrics.impressions || 0,
-      lastUpdated: new Date()
-    };
-    await post.save();
+      res.json({ success: true, message: "Comment published" });
+    } catch (err) {
+      console.log('err', err)
+      res.status(500).json({ message: err.response?.data?.message || err.message });
+    }
+  };
 
-    res.json({ success: true, metrics: post.metrics });
-  } catch (err) {
-    console.error("Sync Metrics Error:", err.message);
-    res.status(500).json({ message: "Failed to sync metrics from LinkedIn API." });
+  exports.syncMetrics = async (req, res) => {
+    try {
+      const post = await Post.findById(req.params.id);
+      const user = await User.findById(req.user.id);
+      
+      if (!post || !post.linkedInPostId) return res.status(404).json({ message: "Post not live" });
+      
+      // Ensure we use the user's token for the metrics sync
+    // console.log('Syncing metrics for post:', post.linkedInPostId);
+      //console.log('Using token for user:', user.linkedInProfile.accessToken);
+      const linkedInAccount = user.linkedInProfile.find(
+    (profile) => profile.urn === post.linkedinUrn
+  );
+
+  if (!linkedInAccount) {
+    throw new Error("LinkedIn account not connected for this URN");
   }
+
+  const accessToken = linkedInAccount.accessToken;
+      const fullDetails = await getPostFullDetails(post.linkedInPostId, accessToken);
+      
+      post.metrics = {
+        likes: fullDetails.stats.likes,
+        comments: fullDetails.stats.comments,
+        shares: post.metrics.shares || 0,
+        impressions: post.metrics.impressions || 0,
+        lastUpdated: new Date()
+      };
+      await post.save();
+
+      res.json({ success: true, metrics: post.metrics });
+    } catch (err) {
+      console.error("Sync Metrics Error:", err.message);
+      res.status(500).json({ message: "Failed to sync metrics from LinkedIn API." });
+    }
 };
 
 

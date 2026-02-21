@@ -10,9 +10,12 @@ const paymentRoutes = require('./src/routes/payment.routes.js');
 const { autoPostJob } = require('./src/jobs/autopost.job.js');
 const adRoutes = require('./src/routes/ads.routes.js'); // Added
 const aiRoutes = require('./src/routes/ai.routes.js')
+const industryAutoPostRoutes = require('./src/routes/industry.routes.js');
+const calendarAutoPostRoutes = require('./src/routes/calendar.routes.js');
 require('./src/models/User.js').createDefaultAdmin(); // Ensure default admin exists
 require('./src/models/Plan.js').defaultPlanCreation(); // Ensure default plans exist
 const dotenv = require('dotenv');
+require('./src/cron/cronRunner.js'); // Start cron jobs
 
 const fs = require("fs");
 const path = require("path");
@@ -72,13 +75,15 @@ app.use('/posts', postRoutes);
 app.use('/admin', adminRoutes);
 app.use('/ads', adRoutes); // Added
 app.use('/ai',aiRoutes);
+app.use('/autopost-industry', industryAutoPostRoutes); // Added
+app.use('/autopost-calendar', calendarAutoPostRoutes); // Added
 
 
-// Scheduling Cron Job (Runs every hour)
-cron.schedule("*/1 * * * *", () => {
-  console.log('Running Auto-Post Job...');
-  autoPostJob();
-});
+// // Scheduling Cron Job (Runs every hour)
+// cron.schedule("*/1 * * * *", () => {
+//   console.log('Running Auto-Post Job...');
+//   autoPostJob();
+// });
 
 const PORT = process.env.PORT ;
 app.listen(PORT, () => console.log(`🚀 Postpilot Backend running on port ${PORT}`));

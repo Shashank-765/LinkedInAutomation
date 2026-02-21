@@ -23,17 +23,31 @@ const UserSchema = new mongoose.Schema({
   linkedInProfile: {type: Array, default: []},
 
   // NEW: Autonomous Configuration
-  autoPilotConfig: {
-    enabled: { type: Boolean, default: false },
-    urn: {type: String},
-    industryKeywords: { type: String, default: 'technology' },
-    calendarEvents: [{
-      date: { type: String }, // YYYY-MM-DD
-      topic: { type: String },
-      isGlobal: { type: Boolean, default: false }
-    }],
-    lastAutoPostDate: { type: String } // To prevent multiple posts per day
-  },
+    autoPilotAccounts: [
+      {
+        urn: { type: String, required: true },
+
+        enabled: { type: Boolean, default: false },
+
+        industrySchedules: [
+          {
+            time: String,
+            keywords: String,
+            lastAutoPostDate: String
+          }
+        ],
+
+        calendarEvents: [
+          {
+            date: String,
+            topic: String,
+            isGlobal: Boolean
+          }
+        ],
+
+        lastCalendarPostDate: String
+      }
+    ],
 
   // Stripe Integration Fields
   stripeCustomerId: { type: String },

@@ -16,6 +16,7 @@ import {
   autoPostIndustryApi,
   autoPostCalendarApi
 } from "../../services/api";
+import PremiumTimePicker from "@/components/PremiumTimePicker";
 
 const AutoPilotManager: React.FC = () => {
   const { user } = useAuth();
@@ -30,10 +31,38 @@ const AutoPilotManager: React.FC = () => {
   const [editingSlotId, setEditingSlotId] = useState<string | null>(null);
   const [editingEventId, setEditingEventId] = useState<string | null>(null);
 
+  const KEYWORD_SUGGESTIONS = [
+    "AI","SaaS","Fintech","Game","Blockchain","Web3",
+    "Crypto","VR","AR","Metaverse","India","Tech"
+  ];
+
+  // =====================================================
+  // SAFE URN
+  // =====================================================
+  const getUrn = () => {
+    if (!user?.linkedInProfile) return null;
+    if (Array.isArray(user.linkedInProfile)) return user.linkedInProfile[0]?.urn;
+    return user.linkedInProfile.urn;
+  };
+
+  // =====================================================
+  // VALIDATION
+  // =====================================================
+  const isValid24HourTime = (time: string) =>
+    /^([01]\d|2[0-3]):([0-5]\d)$/.test(time);
+
+  const handleKeywordChange = (value: string) => {
+    const clean = value.replace(/\s/g, "").replace(/[^a-zA-Z0-9]/g, "");
+    setSlotInput(prev => ({ ...prev, keywords: clean }));
+  };
+
+  const selectSuggestion = (word: string) => {
+    setSlotInput(prev => ({ ...prev, keywords: word }));
+  };
+
   // =====================================================
   // LOAD DATA
   // =====================================================
-
   const loadData = async () => {
     try {
       const [industryRes, calendarRes] = await Promise.all([
@@ -43,7 +72,6 @@ const AutoPilotManager: React.FC = () => {
 
       setIndustryConfig(industryRes.data[0] || null);
       setCalendarConfig(calendarRes.data[0] || null);
-
     } catch {
       toast.error("Failed to load configs");
     } finally {
@@ -54,41 +82,41 @@ const AutoPilotManager: React.FC = () => {
   useEffect(() => {
     if (!user?.linkedInConnected) {
       toast.error("Please connect LinkedIn first");
+      setLoading(false);
       return;
     }
     loadData();
-  }, []);
+  }, [user]);
 
   // =====================================================
-  // CREATE CONFIGS
+  // CREATE CONFIG
   // =====================================================
-
-  console.log('user', user)
   const createIndustry = async () => {
-    const res = await autoPostIndustryApi.create({
-      urn: user.linkedInProfile.urn,
-      enabled: true
-    });
+    const urn = getUrn();
+    if (!urn) return toast.error("LinkedIn not connected");
+
+    const res = await autoPostIndustryApi.create({ urn, enabled: true });
     setIndustryConfig(res.data);
-    toast.success("Industry config created");
   };
 
   const createCalendar = async () => {
-    const res = await autoPostCalendarApi.create({
-      urn: user.linkedInProfile.urn,
-      enabled: true
-    });
+    const urn = getUrn();
+    if (!urn) return toast.error("LinkedIn not connected");
+
+    const res = await autoPostCalendarApi.create({ urn, enabled: true });
     setCalendarConfig(res.data);
-    toast.success("Calendar config created");
   };
 
   // =====================================================
   // INDUSTRY CRUD
   // =====================================================
-
   const addSlot = async () => {
-    if (!slotInput.time || !slotInput.keywords)
-      return toast.error("Fill all fields");
+    if (!industryConfig) return;
+    if (!isValid24HourTime(slotInput.time))
+      return toast.error("Invalid time HH:mm");
+
+    if (!slotInput.keywords)
+      return toast.error("Keyword required");
 
     await autoPostIndustryApi.addSlot(industryConfig._id, slotInput);
     setSlotInput({ time: "", keywords: "" });
@@ -109,8 +137,8 @@ const AutoPilotManager: React.FC = () => {
   // =====================================================
   // CALENDAR CRUD
   // =====================================================
-
   const addEvent = async () => {
+    if (!calendarConfig) return;
     if (!eventInput.date || !eventInput.topic)
       return toast.error("Fill all fields");
 
@@ -133,19 +161,16 @@ const AutoPilotManager: React.FC = () => {
   // =====================================================
   // LOADER
   // =====================================================
-
-  if (loading) {
+  if (loading)
     return (
       <div className="flex justify-center py-40">
         <Loader2 className="animate-spin w-12 h-12 text-blue-500" />
       </div>
     );
-  }
 
   // =====================================================
   // UI
   // =====================================================
-
   return (
     <div className="max-w-6xl mx-auto space-y-12 pb-24 text-white">
 
@@ -153,9 +178,7 @@ const AutoPilotManager: React.FC = () => {
         Autonomous Posting Engine
       </h1>
 
-      {/* ================================================= */}
-      {/* INDUSTRY AUTO POST */}
-      {/* ================================================= */}
+      {/* ================= INDUSTRY ================= */}
 
       <div className="bg-slate-900 p-10 rounded-3xl border border-slate-800 shadow-xl">
 
@@ -173,45 +196,92 @@ const AutoPilotManager: React.FC = () => {
 
         {industryConfig && (
           <>
-            <div className="flex gap-3 mb-6">
-              <input
-                placeholder="09:00"
-                value={slotInput.time}
-                onChange={(e)=>setSlotInput({...slotInput,time:e.target.value})}
-                className="bg-slate-800 px-4 py-3 rounded-xl"
-              />
-              <input
-                placeholder="AI, Fintech"
-                value={slotInput.keywords}
-                onChange={(e)=>setSlotInput({...slotInput,keywords:e.target.value})}
-                className="bg-slate-800 px-4 py-3 rounded-xl flex-1"
-              />
-              <button onClick={addSlot} className="bg-green-600 px-4 rounded-xl">
-                <Plus/>
-              </button>
+            {/* ADD SLOT */}
+            <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 mb-8 backdrop-blur">
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
+
+                <div className="md:col-span-3">
+                  <label className="text-xs text-gray-400 mb-2 block font-semibold tracking-wide">
+                    Schedule Time
+                  </label>
+
+                  <PremiumTimePicker
+                    value={slotInput.time}
+                    onChange={(value: string) => {
+                      if (!isValid24HourTime(value)) {
+                        toast.error("Use HH:mm");
+                        return;
+                      }
+                      setSlotInput(prev => ({ ...prev, time: value }));
+                    }}
+                  />
+                </div>
+
+                <div className="md:col-span-7">
+                  <label className="text-xs text-gray-400 mb-2 block font-semibold tracking-wide">
+                    Topic Keyword
+                  </label>
+
+                  <input
+                    value={slotInput.keywords}
+                    onChange={(e)=>handleKeywordChange(e.target.value)}
+                    className="w-full bg-slate-800 border border-slate-700 px-4 py-3 rounded-xl"
+                  />
+
+                  <div className="flex flex-wrap gap-2 mt-3">
+                    {KEYWORD_SUGGESTIONS.map(word => (
+                      <button
+                        key={word}
+                        onClick={()=>selectSuggestion(word)}
+                        className="px-3 py-1 text-xs rounded-full border bg-slate-800 border-slate-700"
+                      >
+                        {word}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="md:col-span-2 mt-6">
+                  <button
+                    onClick={addSlot}
+                    className="w-full h-[44px] bg-green-600 rounded-xl"
+                  >
+                    Add Slot
+                  </button>
+                </div>
+
+              </div>
             </div>
 
+            {/* SLOT LIST */}
             {industryConfig.schedules?.map((slot:any)=>(
-              <div key={slot._id} className="flex justify-between bg-slate-800 p-4 rounded-xl mb-3">
+              <div key={slot._id} className="bg-slate-900 border border-slate-800 rounded-2xl px-6 py-5 flex justify-between mb-3">
 
                 {editingSlotId === slot._id ? (
                   <>
                     <input
+                      type="time"
                       value={slot.time}
                       onChange={(e)=>{
-                        slot.time = e.target.value;
-                        setIndustryConfig({...industryConfig});
+                        const updated = {...industryConfig};
+                        const target = updated.schedules.find(s=>s._id===slot._id);
+                        target.time = e.target.value;
+                        setIndustryConfig(updated);
                       }}
-                      className="bg-slate-700 px-3 rounded"
+                      className="bg-slate-800 px-3 py-2 rounded-lg"
                     />
+
                     <input
                       value={slot.keywords}
                       onChange={(e)=>{
-                        slot.keywords = e.target.value;
-                        setIndustryConfig({...industryConfig});
+                        const updated = {...industryConfig};
+                        const target = updated.schedules.find(s=>s._id===slot._id);
+                        target.keywords = e.target.value;
+                        setIndustryConfig(updated);
                       }}
-                      className="bg-slate-700 px-3 rounded"
+                      className="bg-slate-800 px-3 py-2 rounded-lg"
                     />
+
                     <button onClick={saveSlotEdit}><Check/></button>
                     <button onClick={()=>setEditingSlotId(null)}><X/></button>
                   </>
@@ -220,6 +290,9 @@ const AutoPilotManager: React.FC = () => {
                     <div>
                       <div className="font-bold">{slot.time}</div>
                       <div className="text-sm text-gray-400">{slot.keywords}</div>
+                      <div className="text-xs text-gray-500">
+                        Last Posted: {slot.lastAutoPostDate || "Never"}
+                      </div>
                     </div>
 
                     <div className="flex gap-3">
@@ -230,17 +303,14 @@ const AutoPilotManager: React.FC = () => {
                     </div>
                   </>
                 )}
-
               </div>
             ))}
+
           </>
         )}
-
       </div>
 
-      {/* ================================================= */}
-      {/* CALENDAR AUTO POST */}
-      {/* ================================================= */}
+      {/* ================= CALENDAR ================= */}
 
       <div className="bg-slate-900 p-10 rounded-3xl border border-slate-800 shadow-xl">
 
@@ -262,13 +332,12 @@ const AutoPilotManager: React.FC = () => {
               <input
                 type="date"
                 value={eventInput.date}
-                onChange={(e)=>setEventInput({...eventInput,date:e.target.value})}
+                onChange={(e)=>setEventInput(prev=>({...prev,date:e.target.value}))}
                 className="bg-slate-800 px-4 py-3 rounded-xl"
               />
               <input
-                placeholder="Event topic"
                 value={eventInput.topic}
-                onChange={(e)=>setEventInput({...eventInput,topic:e.target.value})}
+                onChange={(e)=>setEventInput(prev=>({...prev,topic:e.target.value}))}
                 className="bg-slate-800 px-4 py-3 rounded-xl flex-1"
               />
               <button onClick={addEvent} className="bg-green-600 px-4 rounded-xl">
@@ -285,18 +354,20 @@ const AutoPilotManager: React.FC = () => {
                       type="date"
                       value={event.date}
                       onChange={(e)=>{
-                        event.date = e.target.value;
-                        setCalendarConfig({...calendarConfig});
+                        const updated={...calendarConfig};
+                        const target=updated.events.find(ev=>ev._id===event._id);
+                        target.date=e.target.value;
+                        setCalendarConfig(updated);
                       }}
-                      className="bg-slate-700 px-3 rounded"
                     />
                     <input
                       value={event.topic}
                       onChange={(e)=>{
-                        event.topic = e.target.value;
-                        setCalendarConfig({...calendarConfig});
+                        const updated={...calendarConfig};
+                        const target=updated.events.find(ev=>ev._id===event._id);
+                        target.topic=e.target.value;
+                        setCalendarConfig(updated);
                       }}
-                      className="bg-slate-700 px-3 rounded"
                     />
                     <button onClick={saveEventEdit}><Check/></button>
                     <button onClick={()=>setEditingEventId(null)}><X/></button>
@@ -316,12 +387,10 @@ const AutoPilotManager: React.FC = () => {
                     </div>
                   </>
                 )}
-
               </div>
             ))}
           </>
         )}
-
       </div>
 
     </div>

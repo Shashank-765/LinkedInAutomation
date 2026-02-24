@@ -106,6 +106,11 @@ const PostCreator: React.FC = () => {
   };
 
   const handleGenerateFromNews = async (newsItem: any) => {
+    if(user?.linkedInConnected !== true) {
+      toast.error('Please connect your LinkedIn account to generate post.');
+      
+      return;
+    }
     setTopic(newsItem.topic);
     setCurrentImages(newsItem.image ? [newsItem.image] : []);
     setIsGenerating(true);
@@ -126,6 +131,11 @@ const PostCreator: React.FC = () => {
         toast.error("AI image generation limit reached for your plan.");
         return;
       }
+       if(user?.linkedInConnected !== true) {
+      toast.error('Please connect your LinkedIn account to generate post.');
+      
+      return;
+    }
     // if (!topic) return toast.info('Please enter a topic.');
     setIsGenerating(true);
     try {
@@ -169,6 +179,7 @@ const PostCreator: React.FC = () => {
 
  const handleSaveToQueue = async () => {
   if (!currentContent) return;
+  console.log('user', user)
 
   setIsDrafting(true);
   try {
@@ -179,8 +190,11 @@ const PostCreator: React.FC = () => {
     formData.append("imageSource", currentImages.length ? "AI" : "NONE");
     formData.append("status", PostStatus.PENDING);
 
-    currentImages.forEach((img) =>
+    currentImages.forEach((img) =>{
+
+      console.log('first', img)
       formData.append("images[]", img)
+    }
     );
 
     // console.log('selectedVideoFile', selectedVideoFile)

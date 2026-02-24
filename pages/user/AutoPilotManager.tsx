@@ -30,6 +30,7 @@ const AutoPilotManager: React.FC = () => {
 
   const [editingSlotId, setEditingSlotId] = useState<string | null>(null);
   const [editingEventId, setEditingEventId] = useState<string | null>(null);
+  // console.log('user', user)
 
   const KEYWORD_SUGGESTIONS = [
     "AI","SaaS","Fintech","Game","Blockchain","Web3",

@@ -12,7 +12,7 @@ const roleMiddleware = require('../middlewares/role.middleware.js');
 // User Management
 router.get('/users',authMiddleware, roleMiddleware(['SUPER_ADMIN', 'ADMIN']), adminController.getAllUsers);
 router.post('/users', authMiddleware, roleMiddleware(['SUPER_ADMIN', 'ADMIN']), adminController.createUser);
-router.put('/users/:id', authMiddleware, roleMiddleware(['SUPER_ADMIN', 'ADMIN']), adminController.updateUser);
+router.put('/users/:id', authMiddleware, roleMiddleware(['SUPER_ADMIN', 'ADMIN', 'USER']), adminController.updateUser);
 router.delete('/users/:id', authMiddleware, roleMiddleware(['SUPER_ADMIN', 'ADMIN']), adminController.deleteUser);
 
 // Plan Management

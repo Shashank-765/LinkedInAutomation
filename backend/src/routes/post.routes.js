@@ -22,20 +22,26 @@ const storage = multer.diskStorage({
 });
 
 
-const upload = multer({ storage });
+const upload = multer({
+  storage,
+  limits: {
+    fieldSize: 10 * 1024 * 1024,
+    fileSize: 200 * 1024 * 1024,
+    fields: 50,
+    files: 10,
+  },
+});
 
 const conditionalVideoUpload = (req, res, next) => {
   const contentType = req.headers["content-type"] || "";
-    console.log('contentType', contentType)
-  // Only invoke multer if multipart/form-data (file upload)
-  if (contentType.includes("multipart/form-data")) {
-      console.log('done')
 
+  if (contentType.includes("multipart/form-data")) {
     upload.single("video")(req, res, function (err) {
-    if (err) return next(err);
-    // multer completed successfully (with or without file)
+      if (err) return next(err);
+      next();
+    });
+  } else {
     next();
-  });
   }
 };
 

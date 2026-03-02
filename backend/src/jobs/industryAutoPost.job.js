@@ -10,9 +10,17 @@ const NEWS_API_KEY = '04e85a9205534f4b9028def15df8473c';
 const EVERYTHING_URL = "https://newsapi.org/v2/everything";
 
  async function industryAutoPostJob() {
-  const now = new Date();
-  const todayStr = now.toISOString().split("T")[0];
-  const currentMinutes = now.getHours() * 60 + now.getMinutes();
+  // Convert server time to IST manually
+const now = new Date();
+
+// IST offset = +5 hours 30 minutes
+const IST_OFFSET = 5.5 * 60 * 60 * 1000;
+
+const istNow = new Date(now.getTime() + IST_OFFSET);
+
+// Use IST time
+const todayStr = istNow.toISOString().split("T")[0];
+const currentMinutes = istNow.getUTCHours() * 60 + istNow.getUTCMinutes();
 
   const configs = await AutoPostIndustry.find({ enabled: true });
 console.log('configs', configs)
@@ -55,11 +63,19 @@ console.log('configs', configs)
           }
         });
 
-        const articles = newsRes.data.articles || [];
-        console.log('articles', articles);
+       const articles = newsRes.data.articles || [];
 
-        if (articles.length > 0) {
-          const article = articles[Math.floor(Math.random() * 5)];
+        // ✅ Keep only articles that have image
+        const articlesWithImages = articles.filter(
+          article => article.urlToImage && article.urlToImage.startsWith("http")
+        );
+
+        console.log("Filtered Articles:", articlesWithImages);
+
+        if (articlesWithImages.length > 0) {
+          // pick random article from filtered list
+          const article =
+            articlesWithImages[Math.floor(Math.random() * articlesWithImages.length)];
 
           heading = article.title;
 
@@ -71,7 +87,8 @@ console.log('configs', configs)
 
           assetUrl = article.urlToImage;
         }
-      } catch (err) {
+        }
+       catch (err) {
         console.error('Error fetching news articles:', err);
       }
 

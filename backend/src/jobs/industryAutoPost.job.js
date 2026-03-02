@@ -67,7 +67,7 @@ console.log('configs', configs)
 
         // ✅ Keep only articles that have image
         const articlesWithImages = articles.filter(
-          article => article.urlToImage && article.urlToImage.startsWith("http")
+          article => article.urlToImage && article.urlToImage !== null
         );
 
         console.log("Filtered Articles:", articlesWithImages);

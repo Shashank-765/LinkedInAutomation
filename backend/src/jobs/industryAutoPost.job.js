@@ -23,7 +23,7 @@ const todayStr = istNow.toISOString().split("T")[0];
 const currentMinutes = istNow.getUTCHours() * 60 + istNow.getUTCMinutes();
 
   const configs = await AutoPostIndustry.find({ enabled: true });
-console.log('configs', configs)
+// console.log('configs', configs)
   for (const config of configs) {
 
     const user = await User.findById(config.userId);
@@ -31,9 +31,9 @@ console.log('configs', configs)
     if (!user || !user.linkedInConnected) continue;
 
     for (const slot of config.schedules) {
-        console.log('slot', slot);
+        // console.log('slot', slot);
       if (slot.lastAutoPostDate === todayStr) continue;
-        console.log('currentMinutes', currentMinutes)
+        // console.log('currentMinutes', currentMinutes)
       const [h, m] = slot.time.split(":").map(Number);
       const slotMinutes = h * 60 + m;
       const WINDOW = 3;
@@ -70,7 +70,7 @@ console.log('configs', configs)
           article => article.urlToImage && article.urlToImage !== null
         );
 
-        console.log("Filtered Articles:", articlesWithImages);
+        // console.log("Filtered Articles:", articlesWithImages);
 
         if (articlesWithImages.length > 0) {
           // pick random article from filtered list
@@ -171,6 +171,7 @@ async function deployToLinkedIn(post, user) {
         console.log('err', err)
         console.error(`Deployment failed for post ${post._id}:`, err.message);
         post.status = 'FAILED';
+        post.errorMessage = err.message;
         await post.save();
       }
 }

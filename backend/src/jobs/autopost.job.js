@@ -148,6 +148,7 @@ const accessToken = linkedInAccount.accessToken;
     console.log('err', err)
     console.error(`Deployment failed for post ${post._id}:`, err.message);
     post.status = 'FAILED';
+    post.errorMessage = err.message;
     await post.save();
   }
 }

@@ -17,6 +17,7 @@ const PostSchema = new mongoose.Schema({
     enum: ['PENDING', 'APPROVED', 'SCHEDULED', 'POSTED', 'FAILED','PROCESSING'], 
     default: 'PENDING' 
   },
+  errorMessage: { type: String },
   
   // LinkedIn Deployment Data
   linkedInPostId: { type: String }, // Store the 'urn:li:share:xxx' or post ID

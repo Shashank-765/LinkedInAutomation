@@ -134,16 +134,16 @@ async function deployToLinkedIn(post, user) {
   //   await post.save();
   //   return;
   // }
-      try {
-        const linkedInAccount = user.linkedInProfile.find(
-      (profile) => profile.urn === post.linkedinUrn
-    );
-
-    if (!linkedInAccount) {
-      throw new Error("LinkedIn account not connected for this URN");
-    }
-
-    const accessToken = linkedInAccount.accessToken;
+  const linkedInAccount = user.linkedInProfile.find(
+    (profile) => profile.urn === post.linkedinUrn
+  );
+  
+  if (!linkedInAccount) {
+    throw new Error("LinkedIn account not connected for this URN");
+  }
+  
+  const accessToken = linkedInAccount.accessToken;
+  try {
         let response;
         post.content = removeBrackets(post.content)
         if (post.images && post.images.length > 0) {
@@ -169,10 +169,16 @@ async function deployToLinkedIn(post, user) {
         await post.save();
       } catch (err) {
         console.log('err', err)
-        console.error(`Deployment failed for post ${post._id}:`, err.message);
-        post.status = 'FAILED';
-        post.errorMessage = err.message;
-        await post.save();
+        console.log("retrying deployment for post 2 limit", post._id);
+        post.retryCount = (post.retryCount || 0) + 1;
+        if (post.retryCount > 3) {
+          console.error(`Deployment failed for post ${post._id} after 3 attempts:`, err.message);
+          post.status = 'FAILED';
+          post.errorMessage = err.message;
+          await post.save();
+          return;
+        }
+       await deployToLinkedIn(post, user);
       }
 }
 

@@ -6,20 +6,20 @@ const {calendarAutoPostJob} = require("../jobs/calendarAutoPost.job");
 
 // scheduled queue check every minute
 cron.schedule("*/1 * * * *", () => {
-    console.log('Running Scheduled Post Job...');
+    // console.log('Running Scheduled Post Job...');
     scheduledPostJob(); 
 });
 
 // industry posting every minute
 cron.schedule("*/1 * * * *", () => { 
-    console.log('Running Industry Auto-Post Job...');
+    // console.log('Running Industry Auto-Post Job...');
     industryAutoPostJob();
  });
 
 // calendar posting once daily 8 AM
 cron.schedule("*/1 * * * *", () => { 
     
-    console.log('Running calendarposting Auto-Post Job...')
+    // console.log('Running calendarposting Auto-Post Job...')
     
     calendarAutoPostJob();
 
